@@ -11,11 +11,12 @@
   --surface-warm: #F5F2EB;
   --text: #1A1A1A;
   --text-2: #5A5A5A;
-  --text-3: #9A9A9A;
+  --text-3: #6B6B6B;       /* darkened from #9A9A9A for better readability */
+  --text-faint: #A8A8A8;   /* used only for em-dash placeholders */
   --gold: #B8860B;
   --gold-soft: #C9B273;
   --gold-tint: rgba(184, 134, 11, 0.08);
-  --gold-tint-strong: rgba(184, 134, 11, 0.14);
+  --gold-tint-strong: rgba(184, 134, 11, 0.18);
   --green: #2ECC71;
   --green-deep: #248F4F;
   --green-tint: rgba(46, 204, 113, 0.07);
@@ -24,6 +25,7 @@
   --border: #EAEAE5;
   --border-2: #F0EFE8;
   --shadow: 0 1px 2px rgba(20,20,20,0.03), 0 6px 20px rgba(20,20,20,0.04);
+  --shadow-lift: 0 2px 4px rgba(20,20,20,0.04), 0 12px 32px rgba(20,20,20,0.06);
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
@@ -39,7 +41,7 @@ body {
 .container { max-width: 1180px; margin: 0 auto; padding: 56px 32px 80px; }
 
 /* HEADER */
-.brand-header { margin-bottom: 64px; padding-bottom: 36px; border-bottom: 1px solid var(--border); }
+.brand-header { margin-bottom: 40px; padding-bottom: 36px; border-bottom: 1px solid var(--border); }
 .brand-pre-label {
   font-size: 11px; letter-spacing: 2.5px; color: var(--text-2);
   text-transform: uppercase; font-weight: 600; margin-bottom: 20px;
@@ -69,15 +71,72 @@ body {
 .status-pill.awaiting    { background: var(--surface-warm); color: var(--text-3); }
 .status-pill.final       { background: var(--text); color: var(--bg); }
 
+/* MONEY STRIP */
+.money-strip {
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+  box-shadow: var(--shadow); margin-bottom: 40px; overflow: hidden;
+}
+.money-stat { padding: 22px 26px; position: relative; }
+.money-stat + .money-stat { border-left: 1px solid var(--border-2); }
+.money-label {
+  font-size: 10px; letter-spacing: 2px; color: var(--text-3);
+  text-transform: uppercase; font-weight: 700; margin-bottom: 8px;
+}
+.money-value {
+  font-size: 28px; font-weight: 800; color: var(--text);
+  letter-spacing: -0.02em; line-height: 1;
+}
+.money-value.gold { color: var(--gold); }
+.money-sub {
+  font-size: 12px; color: var(--text-3); margin-top: 6px;
+}
+
+/* SEASON PROGRESS */
+.season-progress { margin-bottom: 56px; }
+.progress-bar {
+  display: grid; grid-template-columns: repeat(9, 1fr); gap: 6px;
+}
+.round-seg {
+  position: relative; height: 44px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 7px; overflow: hidden;
+  transition: border-color 0.3s ease;
+}
+.round-fill {
+  position: absolute; left: 0; bottom: 0; top: 0;
+  background: var(--gold-tint-strong);
+  transition: width 0.6s ease;
+}
+.round-num {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 13px; font-weight: 700; color: var(--text-2);
+  z-index: 2;
+}
+.round-seg.complete { border-color: var(--gold); }
+.round-seg.complete .round-num { color: var(--gold); }
+.round-seg.partial .round-num { color: var(--text); }
+
 /* SECTIONS */
 section { margin-bottom: 56px; }
 .section-label {
   font-size: 11px; letter-spacing: 2.5px; color: var(--text-3);
-  text-transform: uppercase; font-weight: 600; margin-bottom: 22px;
+  text-transform: uppercase; font-weight: 700; margin-bottom: 22px;
   display: flex; align-items: center; gap: 14px;
 }
 .section-label::after {
   content: ""; flex: 1; height: 1px; background: var(--border);
+}
+
+/* TEAM IDENTITY DOT */
+.team-dot {
+  display: inline-block; width: 10px; height: 10px;
+  border-radius: 50%; margin-right: 10px;
+  vertical-align: middle; flex-shrink: 0;
+}
+.team-name-wrap {
+  display: inline-flex; align-items: center; gap: 0;
 }
 
 /* IN PROGRESS */
@@ -102,7 +161,7 @@ section { margin-bottom: 56px; }
   animation: pulse 1.8s infinite;
 }
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
-.in-progress-team { font-weight: 700; font-size: 17px; margin-bottom: 4px; }
+.in-progress-team { font-weight: 700; font-size: 17px; margin-bottom: 4px; display: flex; align-items: center; }
 .in-progress-round { color: var(--text-2); font-size: 13px; }
 
 /* TABLES */
@@ -113,7 +172,7 @@ section { margin-bottom: 56px; }
 table { width: 100%; border-collapse: collapse; }
 th {
   text-align: left; padding: 16px 20px; font-size: 10px; letter-spacing: 1.8px;
-  color: var(--text-3); text-transform: uppercase; font-weight: 600;
+  color: var(--text-3); text-transform: uppercase; font-weight: 700;
   border-bottom: 1px solid var(--border); background: var(--surface-warm);
 }
 td { padding: 18px 20px; border-bottom: 1px solid var(--border-2); font-size: 14px; vertical-align: middle; }
@@ -126,15 +185,15 @@ tr.rank-1 td:first-child {
 tr.rank-1 .rank-num { color: var(--gold); }
 
 .rank-num { font-weight: 800; font-size: 17px; color: var(--text); }
-.rank-empty { color: var(--text-3); font-size: 17px; }
+.rank-empty { color: var(--text-faint); font-size: 17px; }
 .team-name { font-weight: 600; font-size: 15px; }
 .center { text-align: center; }
 .right  { text-align: right; }
-.muted  { color: var(--text-3); }
+.muted  { color: var(--text-faint); }
 
 .projected { font-weight: 700; font-size: 16px; }
 .payout { color: var(--gold); font-weight: 700; }
-.payout-zero { color: var(--text-3); }
+.payout-zero { color: var(--text-faint); }
 
 .pace {
   display: inline-block; font-size: 10px; letter-spacing: 1.8px;
@@ -143,15 +202,72 @@ tr.rank-1 .rank-num { color: var(--gold); }
 .pace-on     { background: var(--green-tint); color: var(--green-deep); }
 .pace-behind { background: var(--red-tint); color: var(--red); }
 .pace-ahead  { background: var(--gold-tint); color: var(--gold); }
-.pace-empty  { color: var(--text-3); font-size: 14px; }
+.pace-empty  { color: var(--text-faint); font-size: 14px; }
 
 .skin-status {
   font-size: 10px; letter-spacing: 1.8px; font-weight: 700; text-transform: uppercase;
 }
-.skin-status-pending { color: var(--text-3); }
+.skin-status-pending { color: var(--text-faint); }
 .skin-status-settled { color: var(--green-deep); }
 
-/* REELS */
+/* FORMAT GLYPHS */
+.format-cell { display: inline-flex; align-items: center; gap: 10px; }
+.format-glyph {
+  display: inline-block; width: 22px; height: 16px;
+  vertical-align: middle; color: var(--text-2);
+  flex-shrink: 0;
+}
+.format-label { font-size: 14px; color: var(--text); }
+
+/* SKINS WINNERS (multi-line with venmo handles) */
+.skins-winner-block { display: flex; flex-direction: column; gap: 4px; }
+.skins-winner-name { display: flex; align-items: center; font-weight: 600; }
+.skins-venmos {
+  font-size: 12px; color: var(--text-3);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: 0.2px;
+}
+
+/* DRAMA OF THE WEEK */
+.drama-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+  padding: 32px 36px; box-shadow: var(--shadow-lift); position: relative; overflow: hidden;
+}
+.drama-card::before {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 4px; background: var(--gold);
+}
+.drama-card.unlucky::before { background: var(--gold-soft); }
+.drama-card.lucky::before   { background: var(--green); }
+.drama-header {
+  display: flex; align-items: center; gap: 14px; margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+.drama-type-pill {
+  display: inline-block; padding: 5px 12px; border-radius: 100px;
+  font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+}
+.drama-type-pill.lucky { background: var(--green-tint); color: var(--green-deep); }
+.drama-type-pill.unlucky { background: var(--gold-tint); color: var(--gold); }
+.drama-meta {
+  font-size: 11px; letter-spacing: 1.5px; color: var(--text-3);
+  text-transform: uppercase; font-weight: 600;
+}
+.drama-result {
+  font-size: 38px; font-weight: 900; letter-spacing: -0.02em;
+  color: var(--text); margin-bottom: 6px; line-height: 1.05;
+}
+.drama-team {
+  display: flex; align-items: center;
+  font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 16px;
+}
+.drama-caption {
+  font-size: 17px; line-height: 1.5; color: var(--text);
+  font-style: italic; max-width: 720px;
+}
+.drama-caption-empty { color: var(--text-3); font-size: 14px; font-style: italic; }
+
+/* REELS — CAROUSEL */
 .reels-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
 .reel-column-label {
   font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
@@ -160,25 +276,52 @@ tr.rank-1 .rank-num { color: var(--gold); }
 .reel-column.lucky   .reel-column-label { color: var(--green-deep); }
 .reel-column.unlucky .reel-column-label { color: var(--gold); }
 
-.reel-card {
+.reel-carousel {
+  position: relative; overflow: hidden;
   background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
-  padding: 20px 24px 20px 26px; margin-bottom: 14px;
-  box-shadow: var(--shadow); position: relative; overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.reel-track {
+  display: flex;
+  transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.reel-card {
+  flex: 0 0 100%; min-width: 100%;
+  padding: 22px 26px 22px 28px; position: relative;
 }
 .reel-card::before {
-  content: ""; position: absolute; left: 0; top: 18px; bottom: 18px;
+  content: ""; position: absolute; left: 0; top: 22px; bottom: 22px;
   width: 3px; border-radius: 0 3px 3px 0;
 }
 .reel-column.lucky   .reel-card::before { background: var(--green); }
 .reel-column.unlucky .reel-card::before { background: var(--gold-soft); }
 
 .reel-meta {
+  display: flex; align-items: center; gap: 0;
   font-size: 10px; color: var(--text-3); letter-spacing: 1.5px;
-  margin-bottom: 8px; text-transform: uppercase; font-weight: 600;
+  margin-bottom: 8px; text-transform: uppercase; font-weight: 700;
 }
+.reel-meta .team-dot { width: 8px; height: 8px; margin-right: 8px; }
 .reel-result { font-weight: 700; font-size: 15px; margin-bottom: 10px; color: var(--text); }
 .reel-caption { color: var(--text); font-size: 15px; line-height: 1.55; font-style: italic; }
 .reel-caption-empty { color: var(--text-3); font-size: 13px; font-style: italic; }
+
+.reel-dots {
+  display: flex; justify-content: center; align-items: center; gap: 6px;
+  padding: 12px 0 16px;
+  background: var(--surface); border-top: 1px solid var(--border-2);
+}
+.reel-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--border); border: none; padding: 0;
+  cursor: pointer; transition: all 0.25s ease;
+}
+.reel-dot.active {
+  width: 18px; border-radius: 3px;
+}
+.reel-column.lucky   .reel-dot.active { background: var(--green); }
+.reel-column.unlucky .reel-dot.active { background: var(--gold-soft); }
+
 .reel-empty {
   background: var(--surface); color: var(--text-3); font-style: italic;
   padding: 32px; text-align: center; border-radius: 12px;
@@ -195,59 +338,88 @@ tr.rank-1 .rank-num { color: var(--gold); }
 @media (max-width: 760px) {
   .container { padding: 36px 20px 60px; }
   .brand-display { font-size: 42px; }
+  .money-strip { grid-template-columns: 1fr; }
+  .money-stat + .money-stat { border-left: none; border-top: 1px solid var(--border-2); }
+  .money-value { font-size: 24px; }
+  .progress-bar { gap: 4px; }
+  .round-seg { height: 34px; }
+  .round-num { font-size: 11px; }
   .reels-grid { grid-template-columns: 1fr; gap: 28px; }
+  .drama-card { padding: 24px 22px; }
+  .drama-result { font-size: 28px; }
+  .drama-caption { font-size: 15px; }
   table { font-size: 13px; }
   td, th { padding: 12px 12px; }
-  .in-progress-card, .reel-card { padding: 18px 20px 18px 22px; }
+  .in-progress-card { padding: 18px 20px 18px 22px; }
+  .reel-card { padding: 20px 22px 20px 24px; }
   .hide-mobile { display: none; }
 }
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="glyph-scramble" viewBox="0 0 22 16">
+      <circle cx="11" cy="8" r="3.5" fill="currentColor"/>
+    </symbol>
+    <symbol id="glyph-shamble" viewBox="0 0 22 16">
+      <circle cx="5" cy="8" r="3" fill="currentColor"/>
+      <circle cx="16" cy="4.5" r="2" fill="currentColor" opacity="0.65"/>
+      <circle cx="16" cy="11.5" r="2" fill="currentColor" opacity="0.65"/>
+    </symbol>
+    <symbol id="glyph-bestball" viewBox="0 0 22 16">
+      <circle cx="6" cy="8" r="3" fill="currentColor"/>
+      <circle cx="16" cy="8" r="3" fill="currentColor"/>
+    </symbol>
+  </defs>
+</svg>
 <div class="container">
 <header class="brand-header">
   <div class="brand-pre-label">Lucky Golf · 2026 Season</div>
   <h1 class="brand-display">The Lucky Cup</h1>
   <div class="brand-meta-row">
-    <span class="brand-meta">Fox Creek · Blue Tees · Updated May 27, 9:20 AM</span>
+    <span class="brand-meta">Fox Creek · Blue Tees · Updated May 27, 11:09 AM</span>
     <span class="status-pill awaiting">Awaiting Round 1</span>
   </div>
 </header>
 
+<section class="season-progress">
+  <div class="section-label">Season Progress</div>
+  <div class="progress-bar"><div class="round-seg" title="Round 1: pending">
+      <div class="round-fill" style="width: 0%"></div>
+      <div class="round-num">1</div>
+    </div><div class="round-seg" title="Round 2: pending">
+      <div class="round-fill" style="width: 0%"></div>
+      <div class="round-num">2</div>
+    </div><div class="round-seg" title="Round 3: pending">
+      <div class="round-fill" style="width: 0%"></div>
+      <div class="round-num">3</div>
+    </div><div class="round-seg" title="Round 4: pending">
+      <div class="round-fill" style="width: 0%"></div>
+      <div class="round-num">4</div>
+    </div><div class="round-seg" title="Round 5: pending">
+      <div class="round-fill" style="width: 0%"></div>
+      <div class="round-num">5</div>
+    </div><div class="round-seg" title="Round 6: pending">
+      <div class="round-fill" style="width: 0%"></div>
+      <div class="round-num">6</div>
+    </div><div class="round-seg" title="Round 7: pending">
+      <div class="round-fill" style="width: 0%"></div>
+      <div class="round-num">7</div>
+    </div><div class="round-seg" title="Round 8: pending">
+      <div class="round-fill" style="width: 0%"></div>
+      <div class="round-num">8</div>
+    </div><div class="round-seg" title="Round 9: pending">
+      <div class="round-fill" style="width: 0%"></div>
+      <div class="round-num">9</div>
+    </div></div>
+</section>
+
 <section>
   <div class="section-label">Leaderboard</div>
-  <div class="table-wrap"><table>
-  <thead><tr>
-    <th>#</th>
-    <th>Team</th>
-    <th class="center">Played</th>
-    <th class="center">Pts</th>
-    <th class="center">Avg</th>
-    <th class="center">Projected</th>
-    <th class="center">Pace</th>
-    <th class="right">Payout</th>
-  </tr></thead>
-  <tbody><tr class="">
-  <td><span class="rank-empty">—</span></td>
-  <td class="team-name">Cole / Sean</td>
-  <td class="center">0/9</td>
-  <td class="center">0</td>
-  <td class="center">—</td>
-  <td class="center projected">—</td>
-  <td class="center"><span class="pace-empty">—</span></td>
-  <td class="right payout-zero">—</td>
-</tr><tr class="">
-  <td><span class="rank-empty">—</span></td>
-  <td class="team-name">Bryce / Kaitlyn</td>
-  <td class="center">0/9</td>
-  <td class="center">0</td>
-  <td class="center">—</td>
-  <td class="center projected">—</td>
-  <td class="center"><span class="pace-empty">—</span></td>
-  <td class="right payout-zero">—</td>
-</tr></tbody>
-  </table></div>
+  <div class="reel-empty">No teams registered yet. Add teams in the Config tab.</div>
 </section>
+
 <section>
   <div class="section-label">Skins</div>
   <div class="table-wrap"><table>
@@ -261,63 +433,63 @@ tr.rank-1 .rank-num { color: var(--gold); }
   </tr></thead>
   <tbody><tr>
   <td><span class="rank-num">1</span></td>
-  <td>Scramble</td>
+  <td><span class="format-cell"><svg class="format-glyph"><use href="#glyph-scramble"/></svg><span class="format-label">Scramble</span></span></td>
   <td class="center muted">—</td>
   <td class="muted">—</td>
   <td class="right muted">—</td>
   <td class="right"><span class="skin-status skin-status-pending">Pending</span></td>
 </tr><tr>
   <td><span class="rank-num">2</span></td>
-  <td>Shamble</td>
+  <td><span class="format-cell"><svg class="format-glyph"><use href="#glyph-shamble"/></svg><span class="format-label">Shamble</span></span></td>
   <td class="center muted">—</td>
   <td class="muted">—</td>
   <td class="right muted">—</td>
   <td class="right"><span class="skin-status skin-status-pending">Pending</span></td>
 </tr><tr>
   <td><span class="rank-num">3</span></td>
-  <td>Best Ball</td>
+  <td><span class="format-cell"><svg class="format-glyph"><use href="#glyph-bestball"/></svg><span class="format-label">Best Ball</span></span></td>
   <td class="center muted">—</td>
   <td class="muted">—</td>
   <td class="right muted">—</td>
   <td class="right"><span class="skin-status skin-status-pending">Pending</span></td>
 </tr><tr>
   <td><span class="rank-num">4</span></td>
-  <td>Scramble</td>
+  <td><span class="format-cell"><svg class="format-glyph"><use href="#glyph-scramble"/></svg><span class="format-label">Scramble</span></span></td>
   <td class="center muted">—</td>
   <td class="muted">—</td>
   <td class="right muted">—</td>
   <td class="right"><span class="skin-status skin-status-pending">Pending</span></td>
 </tr><tr>
   <td><span class="rank-num">5</span></td>
-  <td>Shamble</td>
+  <td><span class="format-cell"><svg class="format-glyph"><use href="#glyph-shamble"/></svg><span class="format-label">Shamble</span></span></td>
   <td class="center muted">—</td>
   <td class="muted">—</td>
   <td class="right muted">—</td>
   <td class="right"><span class="skin-status skin-status-pending">Pending</span></td>
 </tr><tr>
   <td><span class="rank-num">6</span></td>
-  <td>Best Ball</td>
+  <td><span class="format-cell"><svg class="format-glyph"><use href="#glyph-bestball"/></svg><span class="format-label">Best Ball</span></span></td>
   <td class="center muted">—</td>
   <td class="muted">—</td>
   <td class="right muted">—</td>
   <td class="right"><span class="skin-status skin-status-pending">Pending</span></td>
 </tr><tr>
   <td><span class="rank-num">7</span></td>
-  <td>Scramble</td>
+  <td><span class="format-cell"><svg class="format-glyph"><use href="#glyph-scramble"/></svg><span class="format-label">Scramble</span></span></td>
   <td class="center muted">—</td>
   <td class="muted">—</td>
   <td class="right muted">—</td>
   <td class="right"><span class="skin-status skin-status-pending">Pending</span></td>
 </tr><tr>
   <td><span class="rank-num">8</span></td>
-  <td>Shamble</td>
+  <td><span class="format-cell"><svg class="format-glyph"><use href="#glyph-shamble"/></svg><span class="format-label">Shamble</span></span></td>
   <td class="center muted">—</td>
   <td class="muted">—</td>
   <td class="right muted">—</td>
   <td class="right"><span class="skin-status skin-status-pending">Pending</span></td>
 </tr><tr>
   <td><span class="rank-num">9</span></td>
-  <td>Best Ball</td>
+  <td><span class="format-cell"><svg class="format-glyph"><use href="#glyph-bestball"/></svg><span class="format-label">Best Ball</span></span></td>
   <td class="center muted">—</td>
   <td class="muted">—</td>
   <td class="right muted">—</td>
@@ -338,8 +510,60 @@ tr.rank-1 .rank-num { color: var(--gold); }
   </div>
 </section>
 <footer class="dashboard-footer">
-  0 rounds completed · Last updated May 27, 2026 · 9:20 AM
+  0 rounds played · Last updated May 27, 2026 · 11:09 AM
 </footer>
 </div>
+<script>
+(function() {
+  function initCarousel(carousel) {
+    var track = carousel.querySelector('.reel-track');
+    var cards = carousel.querySelectorAll('.reel-card');
+    var dots  = carousel.querySelectorAll('.reel-dot');
+    if (cards.length <= 1) return;
+
+    var idx = 0;
+    var INTERVAL_MS = 7000;
+    var timer = null;
+
+    function goTo(i) {
+      idx = (i + cards.length) % cards.length;
+      track.style.transform = 'translateX(-' + (idx * 100) + '%)';
+      for (var d = 0; d < dots.length; d++) {
+        if (d === idx) dots[d].classList.add('active');
+        else dots[d].classList.remove('active');
+      }
+    }
+    function start() {
+      stop();
+      timer = setInterval(function() { goTo(idx + 1); }, INTERVAL_MS);
+    }
+    function stop() {
+      if (timer) { clearInterval(timer); timer = null; }
+    }
+    for (var i = 0; i < dots.length; i++) {
+      (function(n) {
+        dots[n].addEventListener('click', function() {
+          goTo(n);
+          start();
+        });
+      })(i);
+    }
+    carousel.addEventListener('mouseenter', stop);
+    carousel.addEventListener('mouseleave', start);
+    start();
+  }
+
+  function init() {
+    var carousels = document.querySelectorAll('.reel-carousel');
+    for (var i = 0; i < carousels.length; i++) initCarousel(carousels[i]);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
 </body>
 </html>
