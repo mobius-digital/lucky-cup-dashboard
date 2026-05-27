@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#FAF9F6">
+<title>The Lucky Cup · Submit</title>
+<style>
+:root {
+  --bg: #FAF9F6; --surface: #FFFFFF; --surface-warm: #F5F2EB;
+  --text: #1A1A1A; --text-2: #5A5A5A; --text-3: #6B6B6B; --text-faint: #A8A8A8;
+  --gold: #B8860B; --gold-soft: #C9B273;
+  --gold-tint: rgba(184,134,11,0.08); --gold-tint-strong: rgba(184,134,11,0.18);
+  --green: #2ECC71; --green-deep: #248F4F; --green-tint: rgba(46,204,113,0.07);
+  --red: #DC503C; --red-tint: rgba(220,80,60,0.07);
+  --border: #EAEAE5; --border-2: #F0EFE8;
+  --shadow: 0 1px 2px rgba(20,20,20,0.03), 0 6px 20px rgba(20,20,20,0.04);
+  --shadow-lift: 0 2px 4px rgba(20,20,20,0.04), 0 12px 32px rgba(20,20,20,0.06);
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg); color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 15px; line-height: 1.55; -webkit-font-smoothing: antialiased;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.container { max-width: 560px; margin: 0 auto; padding: 32px 20px 60px; }
+
+.brand-header { margin-bottom: 32px; padding-bottom: 22px; border-bottom: 1px solid var(--border); }
+.brand-pre-label { font-size: 10px; letter-spacing: 2.5px; color: var(--text-2); text-transform: uppercase; font-weight: 600; margin-bottom: 14px; }
+.brand-display {
+  font-size: 38px; font-weight: 900; letter-spacing: -0.025em; line-height: 0.95;
+  margin: 0; color: var(--text); position: relative; display: inline-block;
+}
+.brand-display::after {
+  content: ""; position: absolute; left: 0; bottom: -10px; width: 56px; height: 2px;
+  background: linear-gradient(90deg, var(--gold) 0%, var(--gold-soft) 60%, transparent 100%);
+}
+.brand-sub { margin-top: 22px; font-size: 13px; color: var(--text-2); }
+
+.screen { display: none; }
+.screen.active { display: block; }
+
+.prompt { font-size: 22px; font-weight: 800; letter-spacing: -0.01em; margin: 0 0 18px; }
+.subprompt { font-size: 14px; color: var(--text-2); margin: -10px 0 22px; }
+
+ 
+.team-grid { display: grid; gap: 12px; }
+.team-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+  padding: 20px 22px; box-shadow: var(--shadow);
+  display: flex; align-items: center; cursor: pointer;
+  transition: transform 0.12s, box-shadow 0.12s, border-color 0.12s;
+  font: inherit; color: inherit; text-align: left; width: 100%;
+}
+.team-card:active { transform: scale(0.98); }
+.team-card:hover { border-color: var(--text-faint); box-shadow: var(--shadow-lift); }
+.team-card .team-dot { width: 14px; height: 14px; border-radius: 50%; margin-right: 14px; flex-shrink: 0; }
+.team-card .team-name { font-size: 17px; font-weight: 700; }
+
+ 
+.round-panel {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+  padding: 20px 22px; box-shadow: var(--shadow); margin-bottom: 24px;
+}
+.round-panel.live { border-color: var(--green); }
+.round-panel-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.round-panel-label { font-size: 10px; letter-spacing: 2px; color: var(--text-3); text-transform: uppercase; font-weight: 700; margin-bottom: 4px; }
+.round-panel-value { font-size: 20px; font-weight: 800; letter-spacing: -0.01em; }
+.round-panel-team { display: flex; align-items: center; font-size: 13px; color: var(--text-2); margin-top: 10px; }
+.round-panel-team .team-dot { width: 10px; height: 10px; border-radius: 50%; margin-right: 8px; }
+.live-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 10px; letter-spacing: 1.8px; color: var(--green-deep);
+  text-transform: uppercase; font-weight: 700;
+}
+.live-dot { width: 6px; height: 6px; background: var(--green); border-radius: 50%; animation: pulse 1.8s infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+
+ 
+.field { margin-bottom: 22px; }
+.field-label { display: block; font-size: 11px; letter-spacing: 2px; color: var(--text-3); text-transform: uppercase; font-weight: 700; margin-bottom: 10px; }
+.field-help { font-size: 12px; color: var(--text-2); margin: -4px 0 12px; }
+.text-input, textarea {
+  width: 100%; padding: 14px 16px; font: inherit; font-size: 15px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+  color: var(--text); resize: vertical;
+}
+textarea { min-height: 80px; font-family: inherit; }
+.text-input:focus, textarea:focus { outline: none; border-color: var(--gold); }
+
+ 
+.photo-uploader {
+  background: var(--surface); border: 1.5px dashed var(--border); border-radius: 12px;
+  padding: 26px; text-align: center; cursor: pointer; transition: border-color 0.15s;
+}
+.photo-uploader:hover { border-color: var(--gold); }
+.photo-uploader input[type=file] { display: none; }
+.photo-uploader-prompt { font-size: 14px; color: var(--text-2); }
+.photo-uploader-prompt strong { color: var(--text); font-weight: 700; display: block; margin-bottom: 4px; font-size: 15px; }
+.photo-preview { position: relative; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); box-shadow: var(--shadow); }
+.photo-preview img { width: 100%; display: block; }
+.replace-link {
+  position: absolute; bottom: 10px; right: 10px;
+  background: rgba(26,26,26,0.85); color: white;
+  font-size: 12px; padding: 8px 14px; border-radius: 100px;
+  border: none; cursor: pointer; font: inherit; font-weight: 600;
+}
+
+ 
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 100%; padding: 16px 24px; font: inherit; font-size: 16px; font-weight: 700;
+  border: none; border-radius: 12px; cursor: pointer;
+  transition: transform 0.12s, opacity 0.12s;
+}
+.btn:active { transform: scale(0.98); }
+.btn-primary { background: var(--text); color: var(--bg); }
+.btn-gold    { background: var(--gold); color: white; }
+.btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-row { display: flex; gap: 10px; margin-top: 22px; }
+.btn-back {
+  background: none; color: var(--text-3); border: none; padding: 10px 0;
+  font: inherit; font-size: 14px; cursor: pointer; margin-bottom: 16px;
+}
+.btn-back:hover { color: var(--text); }
+
+ 
+.stepper-progress {
+  display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;
+}
+.stepper-progress-label { font-size: 11px; letter-spacing: 1.8px; color: var(--text-3); text-transform: uppercase; font-weight: 700; }
+.stepper-progress-pts { font-size: 13px; color: var(--text-2); font-weight: 600; }
+.hole-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+  padding: 26px 22px; box-shadow: var(--shadow-lift); margin-bottom: 16px;
+}
+.hole-num-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px; }
+.hole-prefix { font-size: 11px; letter-spacing: 2px; color: var(--text-3); text-transform: uppercase; font-weight: 700; display: block; margin-bottom: 4px; }
+.hole-num { font-size: 48px; font-weight: 900; letter-spacing: -0.025em; line-height: 1; color: var(--text); }
+.hardest-badge { background: var(--gold-tint); color: var(--gold); font-size: 10px; letter-spacing: 1.5px; font-weight: 700; text-transform: uppercase; padding: 5px 10px; border-radius: 100px; }
+.hole-meta { font-size: 13px; color: var(--text-2); margin: 14px 0 24px; }
+.hole-meta strong { color: var(--text); font-weight: 700; }
+.score-input { display: flex; align-items: center; justify-content: center; gap: 18px; margin-bottom: 8px; }
+.score-btn {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: var(--surface-warm); color: var(--text);
+  font: inherit; font-size: 28px; font-weight: 700; border: 1px solid var(--border);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: transform 0.12s, background 0.12s;
+}
+.score-btn:active { transform: scale(0.92); background: var(--border); }
+.score-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.score-value { font-size: 64px; font-weight: 900; letter-spacing: -0.03em; min-width: 80px; text-align: center; line-height: 1; }
+.score-value.under-par { color: var(--green-deep); }
+.score-value.over-par  { color: var(--red); }
+.score-result { font-size: 11px; letter-spacing: 2px; text-align: center; text-transform: uppercase; font-weight: 700; margin-bottom: 18px; color: var(--text-3); min-height: 16px; }
+
+.hole-dots { display: grid; grid-template-columns: repeat(18, 1fr); gap: 4px; margin-top: 6px; }
+.hole-dot { aspect-ratio: 1 / 1; border-radius: 50%; background: var(--border); cursor: pointer; border: none; padding: 0; transition: background 0.15s; }
+.hole-dot.filled { background: var(--gold); }
+.hole-dot.current { background: var(--text); transform: scale(1.4); }
+
+ 
+.scorecard-grid {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+  overflow: hidden; box-shadow: var(--shadow); margin-bottom: 22px;
+}
+.scorecard-9 { display: grid; grid-template-columns: 60px repeat(9, 1fr) 60px; }
+.scorecard-9 > div { padding: 10px 4px; font-size: 13px; text-align: center; border-bottom: 1px solid var(--border-2); }
+.scorecard-9 > div.header { background: var(--surface-warm); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; color: var(--text-3); border-bottom: 1px solid var(--border); }
+.scorecard-9 > div.label { font-weight: 700; color: var(--text-3); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; }
+.scorecard-9 > div.total { font-weight: 800; background: var(--surface-warm); }
+.scorecard-9 button.score-cell {
+  background: none; border: none; font: inherit; font-size: 14px; font-weight: 600;
+  color: var(--text); padding: 10px 4px; cursor: pointer; border-radius: 6px;
+}
+.scorecard-9 button.score-cell:hover { background: var(--gold-tint); }
+
+ 
+.spinner {
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 3px solid var(--border); border-top-color: var(--gold);
+  animation: spin 0.8s linear infinite; margin: 0 auto 14px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-msg { text-align: center; color: var(--text-2); font-size: 14px; }
+.center-screen { text-align: center; padding: 60px 20px; }
+
+ 
+.result-icon {
+  width: 64px; height: 64px; border-radius: 50%; margin: 0 auto 22px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px; font-weight: 800;
+}
+.result-icon.success { background: var(--green-tint); color: var(--green-deep); }
+.result-icon.error   { background: var(--red-tint); color: var(--red); }
+.result-title { font-size: 26px; font-weight: 800; letter-spacing: -0.01em; margin: 0 0 14px; text-align: center; }
+.result-message { font-size: 15px; color: var(--text-2); margin-bottom: 28px; text-align: center; }
+.result-pts {
+  text-align: center; padding: 22px; background: var(--gold-tint);
+  border-radius: 14px; margin-bottom: 28px;
+}
+.result-pts-label { font-size: 11px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; font-weight: 700; margin-bottom: 6px; }
+.result-pts-value { font-size: 42px; font-weight: 900; color: var(--gold); letter-spacing: -0.02em; line-height: 1; }
+
+.format-help {
+  background: var(--surface-warm); border-radius: 10px;
+  padding: 14px 16px; font-size: 13px; color: var(--text-2);
+  margin-bottom: 22px;
+}
+.format-help strong { color: var(--text); font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header class="brand-header">
+    <div class="brand-pre-label">Lucky Golf · 2026 Season</div>
+    <h1 class="brand-display">The Lucky Cup</h1>
+    <div class="brand-sub">Fox Creek · Blue Tees · Submit your round</div>
+  </header>
+
+  
+  <div class="screen active" id="screen-init">
+    <div class="center-screen">
+      <div class="spinner"></div>
+      <div class="loading-msg">Loading teams…</div>
+    </div>
+  </div>
+
+  
+  <div class="screen" id="screen-team">
+    <h2 class="prompt">Which team?</h2>
+    <p class="subprompt">Pick your team to continue.</p>
+    <div class="team-grid" id="team-grid"></div>
+  </div>
+
+  
+  <div class="screen" id="screen-team-loading">
+    <div class="center-screen">
+      <div class="spinner"></div>
+      <div class="loading-msg">Checking team status…</div>
+    </div>
+  </div>
+
+  
+  <div class="screen" id="screen-teeoff">
+    <button class="btn-back" onclick="goToTeamPicker()">← Change team</button>
+    <div class="round-panel">
+      <div class="round-panel-row">
+        <div>
+          <div class="round-panel-label">Tee Off</div>
+          <div class="round-panel-value">Round <span id="teeoff-round-num"></span> · <span id="teeoff-format"></span></div>
+        </div>
+      </div>
+      <div class="round-panel-team">
+        <span class="team-dot" id="teeoff-team-dot"></span>
+        <span id="teeoff-team-name"></span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Tee Time Photo</label>
+      <div class="field-help">Take a quick photo of your tee time confirmation or the first tee box.</div>
+      <label class="photo-uploader" id="teeoff-photo-uploader">
+        <input type="file" accept="image/*" capture="environment" id="teeoff-photo-input">
+        <div class="photo-uploader-prompt"><strong>Tap to take photo</strong>Or pick from library</div>
+      </label>
+      <div id="teeoff-photo-preview" style="display:none;" class="photo-preview">
+        <img id="teeoff-photo-img">
+        <button class="replace-link" onclick="resetPhoto('teeoff')">Replace</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Notes (optional)</label>
+      <textarea id="teeoff-notes" placeholder="Anything to flag? Conditions, group, side bets…"></textarea>
+    </div>
+
+    <button class="btn btn-primary" id="teeoff-submit" disabled>Lock In Tee Off</button>
+  </div>
+
+  
+  <div class="screen" id="screen-scorecard">
+    <button class="btn-back" onclick="goToTeamPicker()">← Change team</button>
+    <div class="round-panel live">
+      <div class="round-panel-row">
+        <div>
+          <div class="round-panel-label"><span class="live-pill"><span class="live-dot"></span>In Progress</span></div>
+          <div class="round-panel-value">Round <span id="sc-round-num"></span> · <span id="sc-format"></span></div>
+        </div>
+      </div>
+      <div class="round-panel-team">
+        <span class="team-dot" id="sc-team-dot"></span>
+        <span id="sc-team-name"></span>
+      </div>
+    </div>
+
+    <div class="format-help" id="sc-format-help"></div>
+
+    <div class="stepper-progress">
+      <div class="stepper-progress-label">Hole <span id="sc-current-hole">1</span> of 18</div>
+      <div class="stepper-progress-pts" id="sc-running-pts">0 pts</div>
+    </div>
+
+    <div class="hole-card">
+      <div class="hole-num-row">
+        <div>
+          <span class="hole-prefix">Hole</span>
+          <div class="hole-num" id="sc-hole-num">1</div>
+        </div>
+        <span class="hardest-badge" id="sc-hardest-badge" style="display:none;">Hardest #<span id="sc-hcp-rank"></span></span>
+      </div>
+      <div class="hole-meta">Par <strong id="sc-par"></strong> · <strong id="sc-yards"></strong>y · Hcp Index <strong id="sc-hcp"></strong></div>
+
+      <div class="score-input">
+        <button class="score-btn" id="sc-minus" onclick="adjustScore(-1)">−</button>
+        <div class="score-value" id="sc-score">4</div>
+        <button class="score-btn" id="sc-plus" onclick="adjustScore(1)">+</button>
+      </div>
+      <div class="score-result" id="sc-result">Par</div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" id="sc-prev" onclick="prevHole()">Previous</button>
+        <button class="btn btn-primary" id="sc-next" onclick="nextHole()">Next</button>
+      </div>
+    </div>
+
+    <div class="hole-dots" id="sc-hole-dots"></div>
+  </div>
+
+  
+  <div class="screen" id="screen-scorecard-review">
+    <button class="btn-back" onclick="backToStepper()">← Back to scoring</button>
+    <h2 class="prompt">Review &amp; submit</h2>
+    <p class="subprompt">Tap any hole to fix it. Total: <strong id="sc-review-pts"></strong> Stableford pts</p>
+
+    <div class="scorecard-grid" id="sc-review-grid"></div>
+
+    <div class="field">
+      <label class="field-label">Scorecard Photo</label>
+      <div class="field-help">Photo of the physical scorecard for the records.</div>
+      <label class="photo-uploader" id="sc-photo-uploader">
+        <input type="file" accept="image/*" capture="environment" id="sc-photo-input">
+        <div class="photo-uploader-prompt"><strong>Tap to take photo</strong>Or pick from library</div>
+      </label>
+      <div id="sc-photo-preview" style="display:none;" class="photo-preview">
+        <img id="sc-photo-img">
+        <button class="replace-link" onclick="resetPhoto('sc')">Replace</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Notes (optional)</label>
+      <textarea id="sc-notes" placeholder="How'd it go? Memorable shots? Side bet settlements?"></textarea>
+    </div>
+
+    <button class="btn btn-gold" id="sc-submit" disabled>Submit Scorecard</button>
+  </div>
+
+  
+  <div class="screen" id="screen-submitting">
+    <div class="center-screen">
+      <div class="spinner"></div>
+      <div class="loading-msg" id="submit-msg">Submitting…</div>
+    </div>
+  </div>
+
+  
+  <div class="screen" id="screen-success">
+    <div class="result-icon success">✓</div>
+    <h2 class="result-title" id="success-title">Submitted!</h2>
+    <p class="result-message" id="success-message"></p>
+    <div class="result-pts" id="success-pts-block" style="display:none;">
+      <div class="result-pts-label">Stableford Points</div>
+      <div class="result-pts-value" id="success-pts"></div>
+    </div>
+    <button class="btn btn-primary" onclick="resetAll()">Done</button>
+  </div>
+
+  
+  <div class="screen" id="screen-error">
+    <div class="result-icon error">!</div>
+    <h2 class="result-title">Something went wrong</h2>
+    <p class="result-message" id="error-message"></p>
+    <button class="btn btn-primary" onclick="resetAll()">Try Again</button>
+  </div>
+
+  
+  <div class="screen" id="screen-season-complete">
+    <div class="result-icon success">★</div>
+    <h2 class="result-title">Season Complete</h2>
+    <p class="result-message">This team has finished all 9 rounds. Check the dashboard for final standings.</p>
+    <button class="btn btn-primary" onclick="resetAll()">Back to teams</button>
+  </div>
+
+</div>
+
+<script>
+const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxm8DBRk6ViVQ-NjvWF8Bf7YWVuCfSJOlA8QFgJmaLV8ZLYLu7uYUWWkSSf9rIKRnHU/exec';
+
+const COURSE = [
+  { hole: 1,  par: 4, yards: 414, hcp: 1 },
+  { hole: 2,  par: 3, yards: 167, hcp: 15 },
+  { hole: 3,  par: 5, yards: 520, hcp: 7 },
+  { hole: 4,  par: 4, yards: 353, hcp: 13 },
+  { hole: 5,  par: 4, yards: 368, hcp: 9 },
+  { hole: 6,  par: 4, yards: 411, hcp: 3 },
+  { hole: 7,  par: 5, yards: 520, hcp: 5 },
+  { hole: 8,  par: 3, yards: 165, hcp: 17 },
+  { hole: 9,  par: 4, yards: 359, hcp: 11 },
+  { hole: 10, par: 4, yards: 313, hcp: 18 },
+  { hole: 11, par: 4, yards: 365, hcp: 10 },
+  { hole: 12, par: 3, yards: 180, hcp: 16 },
+  { hole: 13, par: 4, yards: 454, hcp: 2 },
+  { hole: 14, par: 5, yards: 525, hcp: 8 },
+  { hole: 15, par: 4, yards: 440, hcp: 4 },
+  { hole: 16, par: 3, yards: 177, hcp: 14 },
+  { hole: 17, par: 4, yards: 378, hcp: 12 },
+  { hole: 18, par: 5, yards: 526, hcp: 6 }
+];
+
+const FORMAT_HELP = {
+  'Scramble':  '<strong>Scramble:</strong> One team ball. Enter the team\'s GROSS score on each hole.',
+  'Shamble':   '<strong>Shamble:</strong> Tee off together, then play your own ball. Enter the team\'s NET score (after handicap).',
+  'Best Ball': '<strong>Best Ball:</strong> Each player plays their own ball; lowest score counts. Enter the team\'s NET score (after handicap).'
+};
+
+let state = {
+  teams: [],
+  selectedTeam: null,
+  flow: null,            
+  roundNum: null,
+  format: null,
+  
+  teeoffPhotoBase64: null,
+  teeoffPhotoMime: null,
+  
+  scHoles: new Array(18).fill(null),
+  scCurrentHole: 1,
+  scPhotoBase64: null,
+  scPhotoMime: null
+};
+
+
+
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+
+
+
+async function init() {
+  try {
+    const res = await fetch(WEB_APP_URL + '?action=teams');
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.error || 'Failed to load teams');
+    state.teams = data.teams;
+    renderTeamPicker();
+    showScreen('screen-team');
+  } catch (err) {
+    showError('Could not load teams: ' + err.message);
+  }
+}
+
+function renderTeamPicker() {
+  const grid = document.getElementById('team-grid');
+  grid.innerHTML = state.teams.map(t =>
+    '<button class="team-card" onclick="selectTeam(\'' + t.id + '\')">' +
+      '<span class="team-dot" style="background:' + t.color + '"></span>' +
+      '<span class="team-name">' + escapeHtml(t.name) + '</span>' +
+    '</button>'
+  ).join('');
+}
+
+function goToTeamPicker() {
+  state.selectedTeam = null;
+  state.flow = null;
+  showScreen('screen-team');
+}
+
+
+
+
+async function selectTeam(teamId) {
+  state.selectedTeam = state.teams.find(t => t.id === teamId);
+  showScreen('screen-team-loading');
+  try {
+    const res = await fetch(WEB_APP_URL + '?action=team-state&teamId=' + encodeURIComponent(teamId));
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.error || 'Failed to load team state');
+
+    if (data.seasonComplete) {
+      showScreen('screen-season-complete');
+      return;
+    }
+
+    if (data.inProgress) {
+      
+      state.flow = 'scorecard';
+      state.roundNum = data.inProgress;
+      state.format = data.inProgressFormat;
+      startScorecardFlow();
+    } else {
+      
+      state.flow = 'teeoff';
+      state.roundNum = data.nextRound;
+      state.format = data.nextFormat;
+      startTeeOffFlow();
+    }
+  } catch (err) {
+    showError('Could not check team status: ' + err.message);
+  }
+}
+
+
+
+
+function startTeeOffFlow() {
+  document.getElementById('teeoff-round-num').textContent = state.roundNum;
+  document.getElementById('teeoff-format').textContent = state.format;
+  document.getElementById('teeoff-team-dot').style.background = state.selectedTeam.color;
+  document.getElementById('teeoff-team-name').textContent = state.selectedTeam.name;
+  document.getElementById('teeoff-notes').value = '';
+  resetPhoto('teeoff');
+  showScreen('screen-teeoff');
+}
+
+document.getElementById('teeoff-photo-input').addEventListener('change', e => handlePhotoSelect(e, 'teeoff'));
+document.getElementById('teeoff-submit').addEventListener('click', submitTeeOff);
+
+async function submitTeeOff() {
+  const btn = document.getElementById('teeoff-submit');
+  btn.disabled = true;
+  document.getElementById('submit-msg').textContent = 'Locking in your tee off…';
+  showScreen('screen-submitting');
+
+  try {
+    const payload = {
+      type: 'TEE_OFF',
+      teamId: state.selectedTeam.id,
+      roundNum: state.roundNum,
+      photoBase64: state.teeoffPhotoBase64,
+      photoMimeType: state.teeoffPhotoMime,
+      notes: document.getElementById('teeoff-notes').value.trim()
+    };
+    const data = await postJson(payload);
+    if (!data.ok) throw new Error(data.error || 'Submission failed');
+
+    document.getElementById('success-title').textContent = 'Tee Off Locked In';
+    document.getElementById('success-message').textContent = data.message || 'Good luck out there.';
+    document.getElementById('success-pts-block').style.display = 'none';
+    showScreen('screen-success');
+  } catch (err) {
+    showError(err.message);
+  }
+}
+
+
+
+
+function startScorecardFlow() {
+  document.getElementById('sc-round-num').textContent = state.roundNum;
+  document.getElementById('sc-format').textContent = state.format;
+  document.getElementById('sc-team-dot').style.background = state.selectedTeam.color;
+  document.getElementById('sc-team-name').textContent = state.selectedTeam.name;
+  document.getElementById('sc-format-help').innerHTML = FORMAT_HELP[state.format] || '';
+
+  
+  const draftKey = 'luckyCupDraft_' + state.selectedTeam.id + '_R' + state.roundNum;
+  const draft = localStorage.getItem(draftKey);
+  if (draft) {
+    try {
+      const parsed = JSON.parse(draft);
+      state.scHoles = parsed.holes;
+      state.scCurrentHole = parsed.currentHole || 1;
+    } catch (e) {   }
+  } else {
+    state.scHoles = new Array(18).fill(null);
+    state.scCurrentHole = 1;
+  }
+
+  resetPhoto('sc');
+  document.getElementById('sc-notes').value = '';
+  buildHoleDots();
+  renderHole(state.scCurrentHole);
+  showScreen('screen-scorecard');
+}
+
+function renderHole(holeNum) {
+  state.scCurrentHole = holeNum;
+  const hole = COURSE[holeNum - 1];
+
+  document.getElementById('sc-hole-num').textContent = holeNum;
+  document.getElementById('sc-current-hole').textContent = holeNum;
+  document.getElementById('sc-par').textContent = hole.par;
+  document.getElementById('sc-yards').textContent = hole.yards;
+  document.getElementById('sc-hcp').textContent = hole.hcp;
+
+  
+  if (hole.hcp <= 5) {
+    document.getElementById('sc-hardest-badge').style.display = 'inline-block';
+    document.getElementById('sc-hcp-rank').textContent = hole.hcp;
+  } else {
+    document.getElementById('sc-hardest-badge').style.display = 'none';
+  }
+
+  
+  const savedScore = state.scHoles[holeNum - 1];
+  const score = savedScore !== null ? savedScore : hole.par;
+  state.scHoles[holeNum - 1] = score;
+  updateScoreDisplay(score);
+
+  
+  document.getElementById('sc-prev').disabled = holeNum === 1;
+  document.getElementById('sc-next').textContent = holeNum === 18 ? 'Review →' : 'Next';
+
+  updateRunningPts();
+  updateHoleDots();
+  saveDraft();
+}
+
+function adjustScore(delta) {
+  const hole = COURSE[state.scCurrentHole - 1];
+  let score = state.scHoles[state.scCurrentHole - 1] + delta;
+  if (score < 1) score = 1;
+  if (score > 20) score = 20;
+  state.scHoles[state.scCurrentHole - 1] = score;
+  updateScoreDisplay(score);
+  updateRunningPts();
+  saveDraft();
+}
+
+function updateScoreDisplay(score) {
+  const hole = COURSE[state.scCurrentHole - 1];
+  const el = document.getElementById('sc-score');
+  el.textContent = score;
+  el.classList.remove('under-par', 'over-par');
+  const diff = score - hole.par;
+  let resultLabel = '';
+  if (diff <= -2) { el.classList.add('under-par'); resultLabel = (diff === -2 ? 'Eagle' : diff === -3 ? 'Albatross' : 'Better than Albatross') + ' (4 pts)'; }
+  else if (diff === -1) { el.classList.add('under-par'); resultLabel = 'Birdie (3 pts)'; }
+  else if (diff === 0) { resultLabel = 'Par (2 pts)'; }
+  else if (diff === 1) { el.classList.add('over-par'); resultLabel = 'Bogey (1 pt)'; }
+  else { el.classList.add('over-par'); resultLabel = diff === 2 ? 'Double (0 pts)' : 'Double+ (0 pts)'; }
+  document.getElementById('sc-result').textContent = resultLabel;
+  document.getElementById('sc-minus').disabled = score <= 1;
+  document.getElementById('sc-plus').disabled = score >= 20;
+}
+
+function updateRunningPts() {
+  let total = 0;
+  for (let i = 0; i < 18; i++) {
+    if (state.scHoles[i] === null) continue;
+    total += stablefordPts(state.scHoles[i], COURSE[i].par);
+  }
+  document.getElementById('sc-running-pts').textContent = total + ' pts';
+}
+
+function stablefordPts(score, par) {
+  const diff = score - par;
+  if (diff <= -2) return 4;
+  if (diff === -1) return 3;
+  if (diff === 0) return 2;
+  if (diff === 1) return 1;
+  return 0;
+}
+
+function prevHole() {
+  if (state.scCurrentHole > 1) renderHole(state.scCurrentHole - 1);
+}
+
+function nextHole() {
+  if (state.scCurrentHole < 18) {
+    renderHole(state.scCurrentHole + 1);
+  } else {
+    showReview();
+  }
+}
+
+function buildHoleDots() {
+  const container = document.getElementById('sc-hole-dots');
+  container.innerHTML = '';
+  for (let i = 1; i <= 18; i++) {
+    const btn = document.createElement('button');
+    btn.className = 'hole-dot';
+    btn.onclick = () => renderHole(i);
+    container.appendChild(btn);
+  }
+}
+
+function updateHoleDots() {
+  const dots = document.querySelectorAll('.hole-dot');
+  dots.forEach((dot, idx) => {
+    dot.classList.remove('filled', 'current');
+    if (idx + 1 === state.scCurrentHole) dot.classList.add('current');
+    else if (state.scHoles[idx] !== null) dot.classList.add('filled');
+  });
+}
+
+
+
+
+function showReview() {
+  const grid = document.getElementById('sc-review-grid');
+  grid.innerHTML = '';
+
+  const buildNine = (start) => {
+    let html = '<div class="scorecard-9">';
+    html += '<div class="header label">Hole</div>';
+    for (let i = start; i < start + 9; i++) html += '<div class="header">' + (i + 1) + '</div>';
+    html += '<div class="header label">Tot</div>';
+
+    html += '<div class="label">Par</div>';
+    let parTot = 0;
+    for (let i = start; i < start + 9; i++) { html += '<div>' + COURSE[i].par + '</div>'; parTot += COURSE[i].par; }
+    html += '<div class="total">' + parTot + '</div>';
+
+    html += '<div class="label">Score</div>';
+    let scoreTot = 0;
+    for (let i = start; i < start + 9; i++) {
+      const s = state.scHoles[i];
+      html += '<button class="score-cell" onclick="jumpToHole(' + (i + 1) + ')">' + (s !== null ? s : '—') + '</button>';
+      if (s !== null) scoreTot += s;
+    }
+    html += '<div class="total">' + scoreTot + '</div>';
+
+    html += '<div class="label">Pts</div>';
+    let ptsTot = 0;
+    for (let i = start; i < start + 9; i++) {
+      const s = state.scHoles[i];
+      const pts = s !== null ? stablefordPts(s, COURSE[i].par) : 0;
+      html += '<div>' + pts + '</div>';
+      ptsTot += pts;
+    }
+    html += '<div class="total">' + ptsTot + '</div>';
+    html += '</div>';
+    return html;
+  };
+
+  grid.innerHTML = buildNine(0) + buildNine(9);
+
+  let total = 0;
+  for (let i = 0; i < 18; i++) {
+    if (state.scHoles[i] !== null) total += stablefordPts(state.scHoles[i], COURSE[i].par);
+  }
+  document.getElementById('sc-review-pts').textContent = total;
+
+  validateSubmitButton();
+  showScreen('screen-scorecard-review');
+}
+
+function jumpToHole(num) {
+  renderHole(num);
+  showScreen('screen-scorecard');
+}
+
+function backToStepper() {
+  showScreen('screen-scorecard');
+}
+
+document.getElementById('sc-photo-input').addEventListener('change', e => handlePhotoSelect(e, 'sc'));
+document.getElementById('sc-submit').addEventListener('click', submitScorecard);
+
+function validateSubmitButton() {
+  
+  const allHoles = state.scHoles.every(h => h !== null);
+  const hasPhoto = !!state.scPhotoBase64;
+  document.getElementById('sc-submit').disabled = !(allHoles && hasPhoto);
+}
+
+async function submitScorecard() {
+  if (state.scHoles.some(h => h === null)) {
+    showError('Some hole scores are missing. Go back and fill them in.');
+    return;
+  }
+  document.getElementById('submit-msg').textContent = 'Submitting your scorecard…';
+  showScreen('screen-submitting');
+
+  try {
+    const payload = {
+      type: 'SCORECARD',
+      teamId: state.selectedTeam.id,
+      roundNum: state.roundNum,
+      holes: state.scHoles,
+      scorecardPhotoBase64: state.scPhotoBase64,
+      scorecardPhotoMimeType: state.scPhotoMime,
+      notes: document.getElementById('sc-notes').value.trim()
+    };
+    const data = await postJson(payload);
+    if (!data.ok) throw new Error(data.error || 'Submission failed');
+
+    
+    const draftKey = 'luckyCupDraft_' + state.selectedTeam.id + '_R' + state.roundNum;
+    localStorage.removeItem(draftKey);
+
+    document.getElementById('success-title').textContent = 'Round Submitted';
+    document.getElementById('success-message').textContent = data.message || '';
+    document.getElementById('success-pts-block').style.display = 'block';
+    document.getElementById('success-pts').textContent = data.totalStablefordPts;
+    showScreen('screen-success');
+  } catch (err) {
+    showError(err.message);
+  }
+}
+
+
+
+
+function saveDraft() {
+  if (state.flow !== 'scorecard' || !state.selectedTeam) return;
+  const draftKey = 'luckyCupDraft_' + state.selectedTeam.id + '_R' + state.roundNum;
+  try {
+    localStorage.setItem(draftKey, JSON.stringify({
+      holes: state.scHoles,
+      currentHole: state.scCurrentHole,
+      savedAt: new Date().toISOString()
+    }));
+  } catch (e) {   }
+}
+
+
+
+
+async function handlePhotoSelect(event, kind) {
+  const file = event.target.files[0];
+  if (!file) return;
+  try {
+    const result = await resizePhoto(file, 1600, 0.85);
+    if (kind === 'teeoff') {
+      state.teeoffPhotoBase64 = result.base64;
+      state.teeoffPhotoMime = result.mimeType;
+      showPhotoPreview('teeoff', result.dataUrl);
+      document.getElementById('teeoff-submit').disabled = false;
+    } else {
+      state.scPhotoBase64 = result.base64;
+      state.scPhotoMime = result.mimeType;
+      showPhotoPreview('sc', result.dataUrl);
+      validateSubmitButton();
+    }
+  } catch (err) {
+    showError('Could not process photo: ' + err.message);
+  }
+}
+
+function showPhotoPreview(kind, dataUrl) {
+  document.getElementById(kind + '-photo-uploader').style.display = 'none';
+  document.getElementById(kind + '-photo-preview').style.display = 'block';
+  document.getElementById(kind + '-photo-img').src = dataUrl;
+}
+
+function resetPhoto(kind) {
+  document.getElementById(kind + '-photo-uploader').style.display = 'block';
+  document.getElementById(kind + '-photo-preview').style.display = 'none';
+  document.getElementById(kind + '-photo-input').value = '';
+  if (kind === 'teeoff') {
+    state.teeoffPhotoBase64 = null;
+    state.teeoffPhotoMime = null;
+    document.getElementById('teeoff-submit').disabled = true;
+  } else {
+    state.scPhotoBase64 = null;
+    state.scPhotoMime = null;
+    validateSubmitButton();
+  }
+}
+
+function resizePhoto(file, maxDim, quality) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error('Could not read file'));
+    reader.onload = e => {
+      const img = new Image();
+      img.onerror = () => reject(new Error('Could not load image'));
+      img.onload = () => {
+        const ratio = Math.min(1, maxDim / Math.max(img.width, img.height));
+        const w = Math.round(img.width * ratio);
+        const h = Math.round(img.height * ratio);
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, w, h);
+        canvas.toBlob(blob => {
+          if (!blob) { reject(new Error('Resize failed')); return; }
+          const r2 = new FileReader();
+          r2.onload = () => {
+            const dataUrl = r2.result;
+            const base64 = dataUrl.split(',')[1];
+            resolve({ base64, mimeType: blob.type, dataUrl });
+          };
+          r2.readAsDataURL(blob);
+        }, 'image/jpeg', quality);
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+
+
+
+async function postJson(payload) {
+  const res = await fetch(WEB_APP_URL, {
+    method: 'POST',
+    mode: 'cors',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(payload)
+  });
+  return await res.json();
+}
+
+
+
+
+function showError(msg) {
+  document.getElementById('error-message').textContent = msg;
+  showScreen('screen-error');
+}
+
+function resetAll() {
+  state.selectedTeam = null;
+  state.flow = null;
+  state.teeoffPhotoBase64 = null;
+  state.teeoffPhotoMime = null;
+  state.scPhotoBase64 = null;
+  state.scPhotoMime = null;
+  showScreen('screen-team');
+}
+
+function escapeHtml(str) {
+  if (str == null) return '';
+  return String(str)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+}
+
+
+init();
+</script>
+</body>
+</html>
