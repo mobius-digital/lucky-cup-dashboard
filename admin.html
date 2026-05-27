@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#FAF9F6">
+<title>Lucky Cup · Admin</title>
+<style>
+:root {
+  --bg: #FAF9F6; --surface: #FFFFFF; --surface-warm: #F5F2EB;
+  --text: #1A1A1A; --text-2: #5A5A5A; --text-3: #6B6B6B; --text-faint: #A8A8A8;
+  --gold: #B8860B; --gold-soft: #C9B273;
+  --gold-tint: rgba(184,134,11,0.08); --gold-tint-strong: rgba(184,134,11,0.18);
+  --green: #2ECC71; --green-deep: #248F4F; --green-tint: rgba(46,204,113,0.07);
+  --red: #DC503C; --red-tint: rgba(220,80,60,0.07);
+  --amber: #E89F24; --amber-tint: rgba(232,159,36,0.12);
+  --border: #EAEAE5; --border-2: #F0EFE8;
+  --shadow: 0 1px 2px rgba(20,20,20,0.03), 0 6px 20px rgba(20,20,20,0.04);
+  --shadow-lift: 0 2px 4px rgba(20,20,20,0.04), 0 12px 32px rgba(20,20,20,0.06);
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg); color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 15px; line-height: 1.55; -webkit-font-smoothing: antialiased;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.container { max-width: 640px; margin: 0 auto; padding: 28px 20px 60px; }
+
+.brand-header { margin-bottom: 28px; padding-bottom: 18px; border-bottom: 1px solid var(--border); }
+.brand-pre-label { font-size: 10px; letter-spacing: 2.5px; color: var(--amber); text-transform: uppercase; font-weight: 700; margin-bottom: 12px; }
+.brand-display {
+  font-size: 32px; font-weight: 900; letter-spacing: -0.025em; line-height: 0.95;
+  margin: 0; color: var(--text); position: relative; display: inline-block;
+}
+.brand-display::after {
+  content: ""; position: absolute; left: 0; bottom: -8px; width: 48px; height: 2px;
+  background: linear-gradient(90deg, var(--amber) 0%, var(--gold-soft) 60%, transparent 100%);
+}
+.brand-sub { margin-top: 18px; font-size: 13px; color: var(--text-2); }
+
+.screen { display: none; }
+.screen.active { display: block; }
+
+.prompt { font-size: 22px; font-weight: 800; letter-spacing: -0.01em; margin: 0 0 16px; }
+.subprompt { font-size: 14px; color: var(--text-2); margin: -8px 0 22px; }
+
+.list-grid { display: grid; gap: 10px; }
+.list-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+  padding: 16px 18px; box-shadow: var(--shadow);
+  display: flex; align-items: center; cursor: pointer;
+  transition: transform 0.12s, box-shadow 0.12s, border-color 0.12s;
+  font: inherit; color: inherit; text-align: left; width: 100%;
+}
+.list-card:active { transform: scale(0.98); }
+.list-card:hover { border-color: var(--text-faint); box-shadow: var(--shadow-lift); }
+.list-card .team-dot { width: 12px; height: 12px; border-radius: 50%; margin-right: 12px; flex-shrink: 0; }
+.list-card .card-main { flex: 1; min-width: 0; }
+.list-card .card-title { font-size: 15px; font-weight: 700; }
+.list-card .card-sub { font-size: 12px; color: var(--text-3); margin-top: 2px; }
+.list-card .card-meta { font-size: 12px; color: var(--text-2); font-weight: 600; }
+
+.empty-state {
+  text-align: center; padding: 40px 20px; color: var(--text-3);
+  font-size: 14px; background: var(--surface-warm); border-radius: 12px;
+}
+
+.field { margin-bottom: 18px; }
+.field-label { display: block; font-size: 11px; letter-spacing: 2px; color: var(--text-3); text-transform: uppercase; font-weight: 700; margin-bottom: 10px; }
+.field-help { font-size: 12px; color: var(--text-2); margin: -4px 0 12px; }
+.text-input, textarea {
+  width: 100%; padding: 14px 16px; font: inherit; font-size: 15px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+  color: var(--text); resize: vertical; font-family: inherit;
+}
+textarea { min-height: 90px; }
+.text-input:focus, textarea:focus { outline: none; border-color: var(--amber); }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 100%; padding: 14px 22px; font: inherit; font-size: 15px; font-weight: 700;
+  border: none; border-radius: 10px; cursor: pointer;
+  transition: transform 0.12s, opacity 0.12s;
+}
+.btn:active { transform: scale(0.98); }
+.btn-primary { background: var(--text); color: var(--bg); }
+.btn-amber   { background: var(--amber); color: white; }
+.btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+.btn-danger    { background: var(--red); color: white; }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-row { display: flex; gap: 10px; margin-top: 18px; }
+.btn-back {
+  background: none; color: var(--text-3); border: none; padding: 8px 0;
+  font: inherit; font-size: 14px; cursor: pointer; margin-bottom: 14px;
+}
+.btn-back:hover { color: var(--text); }
+
+.round-header {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+  padding: 16px 18px; box-shadow: var(--shadow); margin-bottom: 18px;
+}
+.round-header-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
+.round-header-title { font-size: 18px; font-weight: 800; letter-spacing: -0.01em; display: flex; align-items: center; }
+.round-header-title .team-dot { width: 10px; height: 10px; border-radius: 50%; margin-right: 8px; }
+.round-header-pts { font-size: 22px; font-weight: 900; color: var(--gold); }
+.round-header-meta { font-size: 13px; color: var(--text-2); }
+.round-header-handicap { font-size: 11px; letter-spacing: 1.5px; color: var(--text-3); text-transform: uppercase; font-weight: 700; margin-top: 8px; }
+.round-header-handicap strong { color: var(--text); font-weight: 800; }
+
+.scorecard-photo-wrap {
+  margin-bottom: 18px; background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; overflow: hidden; cursor: pointer; box-shadow: var(--shadow);
+}
+.scorecard-photo-wrap img { width: 100%; display: block; }
+.scorecard-photo-empty {
+  padding: 24px; text-align: center; color: var(--text-3); font-size: 13px;
+  background: var(--surface-warm); border-radius: 12px; margin-bottom: 18px;
+}
+
+.section-label { font-size: 10px; letter-spacing: 2px; color: var(--text-3); text-transform: uppercase; font-weight: 700; margin-bottom: 10px; }
+
+.scorecard-grid {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+  overflow: hidden; box-shadow: var(--shadow); margin-bottom: 18px;
+}
+.scorecard-9 { display: grid; grid-template-columns: 50px repeat(9, 1fr) 56px; }
+.scorecard-9 > div { padding: 8px 3px; font-size: 13px; text-align: center; border-bottom: 1px solid var(--border-2); }
+.scorecard-9 > div.header { background: var(--surface-warm); font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; color: var(--text-3); border-bottom: 1px solid var(--border); position: relative; }
+.scorecard-9 > div.header.stroke-hole::after { content: ""; position: absolute; top: 3px; right: 3px; width: 5px; height: 5px; border-radius: 50%; background: var(--gold); }
+.scorecard-9 > div.label { font-weight: 700; color: var(--text-3); font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; }
+.scorecard-9 > div.total { font-weight: 800; background: var(--surface-warm); }
+.scorecard-9 > div.net-cell { font-weight: 700; }
+.scorecard-9 > div.net-under { color: var(--green-deep); }
+.scorecard-9 > div.net-over  { color: var(--red); }
+.scorecard-9 > div.pts-good  { color: var(--gold); font-weight: 700; }
+.scorecard-9 button.gross-cell {
+  background: none; border: none; font: inherit; font-size: 14px; font-weight: 600;
+  color: var(--text); padding: 8px 3px; cursor: pointer; border-radius: 6px;
+  position: relative; transition: background 0.12s;
+}
+.scorecard-9 button.gross-cell:hover { background: var(--amber-tint); }
+.scorecard-9 button.gross-cell.edited {
+  background: var(--amber-tint);
+  color: var(--amber); font-weight: 800;
+}
+.scorecard-9 button.gross-cell.edited .old-val {
+  display: block; font-size: 9px; color: var(--text-faint); text-decoration: line-through;
+  font-weight: 500; line-height: 1;
+}
+.scorecard-9 button.gross-cell.edited .new-val {
+  display: block; font-size: 15px; line-height: 1.1; font-weight: 800;
+}
+
+.edit-banner {
+  background: var(--amber-tint); border: 1px solid rgba(232,159,36,0.3);
+  border-radius: 10px; padding: 10px 14px; font-size: 12px; color: var(--text);
+  margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+}
+.edit-banner .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--amber); }
+.edit-banner strong { color: var(--amber); font-weight: 800; }
+
+.history-block {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+  padding: 12px 14px; font-size: 12px; color: var(--text-2); margin-bottom: 18px;
+}
+.history-block .history-tag {
+  display: inline-block; background: var(--surface-warm); padding: 4px 8px;
+  border-radius: 100px; font-size: 11px; margin: 2px 4px 2px 0;
+  color: var(--text-2); font-weight: 600;
+}
+
+/* MODAL — hole editor */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(20,20,20,0.5);
+  display: none; align-items: center; justify-content: center; z-index: 1000;
+  padding: 20px;
+}
+.modal-overlay.active { display: flex; }
+.modal {
+  background: var(--surface); border-radius: 16px; max-width: 400px; width: 100%;
+  padding: 24px; box-shadow: var(--shadow-lift);
+}
+.modal h3 { margin: 0 0 6px; font-size: 20px; font-weight: 800; letter-spacing: -0.01em; }
+.modal-sub { font-size: 13px; color: var(--text-2); margin-bottom: 18px; }
+.modal-current {
+  background: var(--surface-warm); border-radius: 10px; padding: 10px 14px;
+  font-size: 12px; color: var(--text-2); margin-bottom: 16px; text-align: center;
+}
+.modal-current strong { color: var(--text); font-weight: 700; }
+
+.score-input { display: flex; align-items: center; justify-content: center; gap: 18px; margin-bottom: 8px; }
+.score-btn {
+  width: 52px; height: 52px; border-radius: 50%;
+  background: var(--surface-warm); color: var(--text);
+  font: inherit; font-size: 26px; font-weight: 700; border: 1px solid var(--border);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
+.score-btn:active { background: var(--border); }
+.score-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.score-value { font-size: 56px; font-weight: 900; letter-spacing: -0.03em; min-width: 80px; text-align: center; line-height: 1; }
+.score-value.under-par { color: var(--green-deep); }
+.score-value.over-par  { color: var(--red); }
+.score-result { font-size: 11px; letter-spacing: 1.8px; text-align: center; text-transform: uppercase; font-weight: 700; margin: 12px 0 6px; color: var(--text-3); min-height: 14px; }
+.score-net-info { font-size: 11px; color: var(--text-3); text-align: center; margin-bottom: 18px; font-style: italic; min-height: 14px; }
+
+/* REASON SCREEN */
+.reason-grid { display: grid; gap: 10px; margin-bottom: 22px; }
+.reason-card {
+  background: var(--surface); border: 1.5px solid var(--border); border-radius: 12px;
+  padding: 14px 16px; cursor: pointer; font: inherit; text-align: left; width: 100%; color: inherit;
+  transition: all 0.12s;
+}
+.reason-card.selected { border-color: var(--amber); background: var(--amber-tint); }
+.reason-card-title { font-weight: 700; font-size: 14px; margin-bottom: 2px; }
+.reason-card-desc  { font-size: 12px; color: var(--text-2); }
+
+.diff-summary {
+  background: var(--surface-warm); border-radius: 10px; padding: 12px 14px;
+  font-size: 13px; color: var(--text); margin-bottom: 18px;
+}
+.diff-summary strong { color: var(--amber); font-weight: 800; }
+
+/* MISC */
+.spinner {
+  width: 30px; height: 30px; border-radius: 50%;
+  border: 3px solid var(--border); border-top-color: var(--amber);
+  animation: spin 0.8s linear infinite; margin: 0 auto 12px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-msg { text-align: center; color: var(--text-2); font-size: 14px; }
+.center-screen { text-align: center; padding: 50px 20px; }
+
+.result-icon {
+  width: 56px; height: 56px; border-radius: 50%; margin: 0 auto 18px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; font-weight: 800;
+}
+.result-icon.success { background: var(--green-tint); color: var(--green-deep); }
+.result-icon.error   { background: var(--red-tint); color: var(--red); }
+.result-title { font-size: 22px; font-weight: 800; letter-spacing: -0.01em; margin: 0 0 12px; text-align: center; }
+.result-message { font-size: 14px; color: var(--text-2); margin-bottom: 24px; text-align: center; }
+
+/* PHOTO LIGHTBOX */
+.lightbox {
+  position: fixed; inset: 0; background: rgba(15,15,15,0.95);
+  display: none; align-items: center; justify-content: center; z-index: 1100;
+  padding: 20px; cursor: zoom-out;
+}
+.lightbox.active { display: flex; }
+.lightbox img { max-width: 100%; max-height: 90vh; object-fit: contain; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header class="brand-header">
+    <div class="brand-pre-label">⚙ Admin · The Lucky Cup</div>
+    <h1 class="brand-display">Amend Scores</h1>
+    <div class="brand-sub">Edit any team's completed round. Audit-tracked.</div>
+  </header>
+
+  <!-- PASSCODE GATE -->
+  <div class="screen active" id="screen-passcode">
+    <h2 class="prompt">Admin passcode</h2>
+    <p class="subprompt">Enter the key to unlock the admin tool. You'll only need to do this once per device.</p>
+    <div class="field">
+      <input type="password" class="text-input" id="passcode-input" placeholder="Enter passcode" autocomplete="off">
+    </div>
+    <button class="btn btn-primary" id="passcode-submit">Unlock</button>
+    <div id="passcode-error" style="color:var(--red);font-size:13px;text-align:center;margin-top:12px;display:none;"></div>
+  </div>
+
+  <!-- LOADING -->
+  <div class="screen" id="screen-loading">
+    <div class="center-screen">
+      <div class="spinner"></div>
+      <div class="loading-msg" id="loading-msg">Loading…</div>
+    </div>
+  </div>
+
+  <!-- TEAM PICKER -->
+  <div class="screen" id="screen-teams">
+    <h2 class="prompt">Pick a team</h2>
+    <p class="subprompt">Which team's scores need a change?</p>
+    <div class="list-grid" id="teams-list"></div>
+    <div style="margin-top:24px;text-align:center;">
+      <button class="btn-back" onclick="signOut()">Sign out (clear stored key)</button>
+    </div>
+  </div>
+
+  <!-- ROUND PICKER -->
+  <div class="screen" id="screen-rounds">
+    <button class="btn-back" onclick="backToTeams()">← Pick a different team</button>
+    <h2 class="prompt" id="rounds-title">Completed rounds</h2>
+    <p class="subprompt">Pick the round you need to edit.</p>
+    <div class="list-grid" id="rounds-list"></div>
+  </div>
+
+  <!-- EDIT SCREEN -->
+  <div class="screen" id="screen-edit">
+    <button class="btn-back" onclick="backToRounds()">← Pick a different round</button>
+
+    <div class="round-header" id="edit-header"></div>
+
+    <div class="section-label">Scorecard Photo</div>
+    <div id="edit-photo-container"></div>
+
+    <div class="section-label" style="margin-top:18px;">Scores · Tap any gross score to edit</div>
+    <div class="edit-banner" id="edit-banner" style="display:none;">
+      <span class="dot"></span>
+      <div><strong id="edit-count">0</strong> hole(s) staged for change</div>
+    </div>
+    <div class="scorecard-grid" id="edit-scorecard"></div>
+
+    <div id="edit-history-section" style="display:none;">
+      <div class="section-label">Edit History</div>
+      <div class="history-block" id="edit-history"></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-secondary" id="edit-discard" onclick="discardEdits()" disabled>Discard Edits</button>
+      <button class="btn btn-amber" id="edit-continue" onclick="goToReason()" disabled>Continue →</button>
+    </div>
+  </div>
+
+  <!-- REASON SCREEN -->
+  <div class="screen" id="screen-reason">
+    <button class="btn-back" onclick="backToEdit()">← Back to scores</button>
+    <h2 class="prompt">Reason for changes</h2>
+    <p class="subprompt">Pick the type of edit and add a short note. Both get logged.</p>
+
+    <div class="diff-summary" id="reason-diff-summary"></div>
+
+    <div class="field">
+      <label class="field-label">Reason type</label>
+      <div class="reason-grid">
+        <button class="reason-card" data-type="typo" onclick="selectReasonType('typo')">
+          <div class="reason-card-title">Typo fix</div>
+          <div class="reason-card-desc">Team entered the wrong number; you're correcting clerical errors.</div>
+        </button>
+        <button class="reason-card" data-type="appeal" onclick="selectReasonType('appeal')">
+          <div class="reason-card-title">Group appeal</div>
+          <div class="reason-card-desc">Group voted to overturn a score (ball in hazard, ruling, etc.).</div>
+        </button>
+        <button class="reason-card" data-type="other" onclick="selectReasonType('other')">
+          <div class="reason-card-title">Other correction</div>
+          <div class="reason-card-desc">Anything else. Use the note to explain.</div>
+        </button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Note</label>
+      <textarea id="reason-note" placeholder="What happened? E.g. 'Ball was in hazard on H7, group voted to apply stroke and distance.'"></textarea>
+    </div>
+
+    <button class="btn btn-amber" id="reason-submit" onclick="submitAmendment()" disabled>Apply Changes</button>
+  </div>
+
+  <!-- SUBMITTING -->
+  <div class="screen" id="screen-submitting">
+    <div class="center-screen">
+      <div class="spinner"></div>
+      <div class="loading-msg">Applying changes…</div>
+    </div>
+  </div>
+
+  <!-- SUCCESS -->
+  <div class="screen" id="screen-success">
+    <div class="result-icon success">✓</div>
+    <h2 class="result-title">Changes Applied</h2>
+    <p class="result-message" id="success-message"></p>
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="goToEdit()">View this round</button>
+      <button class="btn btn-primary" onclick="backToTeams()">Done</button>
+    </div>
+  </div>
+
+  <!-- ERROR -->
+  <div class="screen" id="screen-error">
+    <div class="result-icon error">!</div>
+    <h2 class="result-title">Something went wrong</h2>
+    <p class="result-message" id="error-message"></p>
+    <button class="btn btn-primary" onclick="backToEdit()">Back</button>
+  </div>
+
+</div>
+
+<!-- HOLE EDITOR MODAL -->
+<div class="modal-overlay" id="hole-modal">
+  <div class="modal">
+    <h3 id="hole-modal-title">Hole 1</h3>
+    <div class="modal-sub" id="hole-modal-meta">Par 4 · Hcp Index 1</div>
+    <div class="modal-current" id="hole-modal-current">Current gross: <strong>4</strong></div>
+
+    <div class="score-input">
+      <button class="score-btn" id="modal-minus" onclick="adjustModalScore(-1)">−</button>
+      <div class="score-value" id="modal-score">4</div>
+      <button class="score-btn" id="modal-plus" onclick="adjustModalScore(1)">+</button>
+    </div>
+    <div class="score-result" id="modal-result">Par</div>
+    <div class="score-net-info" id="modal-net-info"></div>
+
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="closeHoleModal()">Cancel</button>
+      <button class="btn btn-amber" onclick="saveHoleEdit()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- PHOTO LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <img id="lightbox-img" alt="Scorecard">
+</div>
+
+<script>
+const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbynHydnGf45yGZ-kNHDcDkxKfbreRgmGwb6vYYASSs/dev';
+
+const COURSE = [
+  { hole: 1,  par: 4, yards: 414, hcp: 1 },
+  { hole: 2,  par: 3, yards: 167, hcp: 15 },
+  { hole: 3,  par: 5, yards: 520, hcp: 7 },
+  { hole: 4,  par: 4, yards: 353, hcp: 13 },
+  { hole: 5,  par: 4, yards: 368, hcp: 9 },
+  { hole: 6,  par: 4, yards: 411, hcp: 3 },
+  { hole: 7,  par: 5, yards: 520, hcp: 5 },
+  { hole: 8,  par: 3, yards: 165, hcp: 17 },
+  { hole: 9,  par: 4, yards: 359, hcp: 11 },
+  { hole: 10, par: 4, yards: 313, hcp: 18 },
+  { hole: 11, par: 4, yards: 365, hcp: 10 },
+  { hole: 12, par: 3, yards: 180, hcp: 16 },
+  { hole: 13, par: 4, yards: 454, hcp: 2 },
+  { hole: 14, par: 5, yards: 525, hcp: 8 },
+  { hole: 15, par: 4, yards: 440, hcp: 4 },
+  { hole: 16, par: 3, yards: 177, hcp: 14 },
+  { hole: 17, par: 4, yards: 378, hcp: 12 },
+  { hole: 18, par: 5, yards: 526, hcp: 6 }
+];
+
+const STORAGE_KEY = 'luckyCupAdminKey';
+
+let state = {
+  adminKey: null,
+  teams: [],
+  selectedTeam: null,
+  completedRounds: [],
+  selectedRound: null,
+  roundData: null,    // full data for selected round (from admin-round-data)
+  edits: {},          // { holeIdx: newGrossScore }  — only changed holes
+  modalHole: null,    // hole number currently in edit modal
+  modalScore: null,
+  reasonType: null    // 'typo' | 'appeal' | 'other'
+};
+
+// ============================================================
+//  SCREEN HELPERS
+// ============================================================
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function showError(msg) {
+  document.getElementById('error-message').textContent = msg;
+  showScreen('screen-error');
+}
+
+// ============================================================
+//  PASSCODE GATE
+// ============================================================
+async function init() {
+  const stored = localStorage.getItem(STORAGE_KEY);
+  if (stored) {
+    state.adminKey = stored;
+    // Verify against the server
+    showScreen('screen-loading');
+    document.getElementById('loading-msg').textContent = 'Verifying access…';
+    const ok = await verifyKey(stored);
+    if (ok) {
+      loadTeams();
+    } else {
+      localStorage.removeItem(STORAGE_KEY);
+      state.adminKey = null;
+      showScreen('screen-passcode');
+    }
+  } else {
+    showScreen('screen-passcode');
+  }
+}
+
+document.getElementById('passcode-submit').addEventListener('click', submitPasscode);
+document.getElementById('passcode-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') submitPasscode();
+});
+
+async function submitPasscode() {
+  const input = document.getElementById('passcode-input').value.trim();
+  const errorEl = document.getElementById('passcode-error');
+  errorEl.style.display = 'none';
+  if (!input) return;
+
+  const submitBtn = document.getElementById('passcode-submit');
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Checking…';
+
+  try {
+    const ok = await verifyKey(input);
+    if (ok) {
+      state.adminKey = input;
+      localStorage.setItem(STORAGE_KEY, input);
+      loadTeams();
+    } else {
+      errorEl.textContent = 'Wrong passcode, or ADMIN_KEY not set on the server.';
+      errorEl.style.display = 'block';
+    }
+  } catch (err) {
+    errorEl.textContent = 'Could not verify: ' + err.message;
+    errorEl.style.display = 'block';
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Unlock';
+  }
+}
+
+async function verifyKey(key) {
+  const res = await fetch(WEB_APP_URL + '?action=admin-verify&adminKey=' + encodeURIComponent(key));
+  const data = await res.json();
+  return !!data.ok;
+}
+
+function signOut() {
+  localStorage.removeItem(STORAGE_KEY);
+  state.adminKey = null;
+  state.teams = [];
+  showScreen('screen-passcode');
+  document.getElementById('passcode-input').value = '';
+}
+
+// ============================================================
+//  TEAM PICKER
+// ============================================================
+async function loadTeams() {
+  showScreen('screen-loading');
+  document.getElementById('loading-msg').textContent = 'Loading teams…';
+  try {
+    const res = await fetch(WEB_APP_URL + '?action=admin-teams&adminKey=' + encodeURIComponent(state.adminKey));
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.error || 'Failed to load teams');
+    state.teams = data.teams || [];
+    renderTeamsList();
+    showScreen('screen-teams');
+  } catch (err) {
+    showError('Could not load teams: ' + err.message);
+  }
+}
+
+function renderTeamsList() {
+  const list = document.getElementById('teams-list');
+  if (state.teams.length === 0) {
+    list.innerHTML = '<div class="empty-state">No teams configured.</div>';
+    return;
+  }
+  list.innerHTML = state.teams.map(t =>
+    '<button class="list-card" onclick="selectTeam(\'' + t.id + '\')">' +
+      '<span class="team-dot" style="background:' + t.color + '"></span>' +
+      '<div class="card-main">' +
+        '<div class="card-title">' + escapeHtml(t.name) + '</div>' +
+        '<div class="card-sub">' + t.id + ' · Handicap ' + (t.handicap || 0) + '</div>' +
+      '</div>' +
+    '</button>'
+  ).join('');
+}
+
+function backToTeams() {
+  state.selectedTeam = null;
+  state.selectedRound = null;
+  state.roundData = null;
+  state.edits = {};
+  showScreen('screen-teams');
+}
+
+// ============================================================
+//  ROUND PICKER
+// ============================================================
+async function selectTeam(teamId) {
+  state.selectedTeam = state.teams.find(t => t.id === teamId);
+  showScreen('screen-loading');
+  document.getElementById('loading-msg').textContent = 'Loading rounds…';
+  try {
+    const url = WEB_APP_URL + '?action=admin-team-rounds&teamId=' + encodeURIComponent(teamId)
+      + '&adminKey=' + encodeURIComponent(state.adminKey);
+    const res = await fetch(url);
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.error || 'Failed to load rounds');
+    state.completedRounds = data.rounds || [];
+    renderRoundsList();
+    document.getElementById('rounds-title').textContent = state.selectedTeam.name;
+    showScreen('screen-rounds');
+  } catch (err) {
+    showError('Could not load rounds: ' + err.message);
+  }
+}
+
+function renderRoundsList() {
+  const list = document.getElementById('rounds-list');
+  if (state.completedRounds.length === 0) {
+    list.innerHTML = '<div class="empty-state">No completed rounds for this team.</div>';
+    return;
+  }
+  list.innerHTML = state.completedRounds.map(r => {
+    const date = r.datePlayed ? new Date(r.datePlayed).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '';
+    return '<button class="list-card" onclick="selectRound(' + r.roundNum + ')">' +
+      '<div class="card-main">' +
+        '<div class="card-title">Round ' + r.roundNum + ' · ' + escapeHtml(r.format) + '</div>' +
+        '<div class="card-sub">' + date + '</div>' +
+      '</div>' +
+      '<div class="card-meta">' + r.totalPts + ' pts</div>' +
+    '</button>';
+  }).join('');
+}
+
+function backToRounds() {
+  state.selectedRound = null;
+  state.roundData = null;
+  state.edits = {};
+  showScreen('screen-rounds');
+}
+
+// ============================================================
+//  EDIT SCREEN
+// ============================================================
+async function selectRound(roundNum) {
+  state.selectedRound = roundNum;
+  state.edits = {};
+  showScreen('screen-loading');
+  document.getElementById('loading-msg').textContent = 'Loading round data…';
+  try {
+    const url = WEB_APP_URL + '?action=admin-round-data'
+      + '&teamId=' + encodeURIComponent(state.selectedTeam.id)
+      + '&roundNum=' + roundNum
+      + '&adminKey=' + encodeURIComponent(state.adminKey);
+    const res = await fetch(url);
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.error || 'Failed to load round');
+    state.roundData = data;
+    renderEditScreen();
+    showScreen('screen-edit');
+  } catch (err) {
+    showError('Could not load round: ' + err.message);
+  }
+}
+
+function goToEdit() {
+  if (state.roundData) {
+    state.edits = {};
+    renderEditScreen();
+    showScreen('screen-edit');
+  } else {
+    backToTeams();
+  }
+}
+
+function renderEditScreen() {
+  const d = state.roundData;
+  // Header
+  const date = d.datePlayed ? new Date(d.datePlayed).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '';
+  document.getElementById('edit-header').innerHTML =
+    '<div class="round-header-top">' +
+      '<div class="round-header-title"><span class="team-dot" style="background:' + d.teamColor + '"></span>' + escapeHtml(d.teamName) + '</div>' +
+      '<div class="round-header-pts">' + d.totalPts + ' pts</div>' +
+    '</div>' +
+    '<div class="round-header-meta">Round ' + d.roundNum + ' · ' + escapeHtml(d.format) + (date ? ' · ' + date : '') + '</div>' +
+    '<div class="round-header-handicap">Handicap: <strong>' + d.handicap + '</strong></div>';
+
+  // Photo
+  const photoContainer = document.getElementById('edit-photo-container');
+  if (d.scorecardPhoto) {
+    const thumb = driveThumb(d.scorecardPhoto, 1200);
+    photoContainer.innerHTML =
+      '<div class="scorecard-photo-wrap" onclick="openLightbox(\'' + escapeAttr(thumb) + '\')">' +
+        '<img src="' + thumb + '" alt="Scorecard photo">' +
+      '</div>';
+  } else {
+    photoContainer.innerHTML = '<div class="scorecard-photo-empty">No scorecard photo on file.</div>';
+  }
+
+  // Scorecard
+  renderScorecard();
+
+  // History (parse audit tags from notes)
+  renderHistory(d.notes);
+
+  // Buttons
+  updateEditButtons();
+}
+
+function renderScorecard() {
+  const d = state.roundData;
+  const grid = document.getElementById('edit-scorecard');
+  const buildNine = (start) => {
+    let html = '<div class="scorecard-9">';
+    // Header
+    html += '<div class="header label">Hole</div>';
+    for (let i = start; i < start + 9; i++) {
+      const isStroke = (d.strokeAllocation[i] || 0) > 0 && d.format !== 'Scramble';
+      html += '<div class="header' + (isStroke ? ' stroke-hole' : '') + '">' + (i + 1) + '</div>';
+    }
+    html += '<div class="header label">Tot</div>';
+
+    // Par
+    html += '<div class="label">Par</div>';
+    let parTot = 0;
+    for (let i = start; i < start + 9; i++) { html += '<div>' + COURSE[i].par + '</div>'; parTot += COURSE[i].par; }
+    html += '<div class="total">' + parTot + '</div>';
+
+    // Gross — clickable
+    html += '<div class="label">Gross</div>';
+    let grossTot = 0;
+    for (let i = start; i < start + 9; i++) {
+      const original = d.grossHoles[i];
+      const edited = state.edits.hasOwnProperty(i);
+      const current = edited ? state.edits[i] : original;
+      let cellContent;
+      if (edited) {
+        cellContent = '<span class="old-val">' + original + '</span><span class="new-val">' + current + '</span>';
+      } else {
+        cellContent = current;
+      }
+      html += '<button class="gross-cell' + (edited ? ' edited' : '') + '" onclick="openHoleModal(' + (i + 1) + ')">' + cellContent + '</button>';
+      grossTot += current;
+    }
+    html += '<div class="total">' + grossTot + '</div>';
+
+    // Net — computed live
+    const hasHandicap = d.format !== 'Scramble' && d.handicap > 0;
+    if (hasHandicap) {
+      html += '<div class="label">Net</div>';
+      let netTot = 0;
+      for (let i = start; i < start + 9; i++) {
+        const gross = state.edits.hasOwnProperty(i) ? state.edits[i] : d.grossHoles[i];
+        const net = computeNet(gross, i);
+        const diff = net - COURSE[i].par;
+        const cls = diff < 0 ? 'net-cell net-under' : (diff > 0 ? 'net-cell net-over' : 'net-cell');
+        html += '<div class="' + cls + '">' + net + '</div>';
+        netTot += net;
+      }
+      html += '<div class="total">' + netTot + '</div>';
+    }
+
+    // Pts
+    html += '<div class="label">Pts</div>';
+    let ptsTot = 0;
+    for (let i = start; i < start + 9; i++) {
+      const gross = state.edits.hasOwnProperty(i) ? state.edits[i] : d.grossHoles[i];
+      const net = computeNet(gross, i);
+      const pts = stablefordPts(net, COURSE[i].par);
+      html += '<div class="' + (pts >= 3 ? 'pts-good' : '') + '">' + pts + '</div>';
+      ptsTot += pts;
+    }
+    html += '<div class="total">' + ptsTot + '</div>';
+
+    html += '</div>';
+    return html;
+  };
+
+  grid.innerHTML = buildNine(0) + buildNine(9);
+}
+
+function renderHistory(notes) {
+  const section = document.getElementById('edit-history-section');
+  const block = document.getElementById('edit-history');
+  if (!notes || !notes.trim()) {
+    section.style.display = 'none';
+    return;
+  }
+  // Extract audit tags like [APPEALED 2026-06-15: ...]
+  const tags = notes.match(/\[(APPEALED|FIXED|CORRECTED)[^\]]*\]/g);
+  if (!tags || tags.length === 0) {
+    section.style.display = 'none';
+    return;
+  }
+  block.innerHTML = tags.map(t => '<span class="history-tag">' + escapeHtml(t) + '</span>').join('');
+  section.style.display = 'block';
+}
+
+function updateEditButtons() {
+  const editCount = Object.keys(state.edits).length;
+  const banner = document.getElementById('edit-banner');
+  if (editCount > 0) {
+    document.getElementById('edit-count').textContent = editCount;
+    banner.style.display = 'flex';
+  } else {
+    banner.style.display = 'none';
+  }
+  document.getElementById('edit-discard').disabled = (editCount === 0);
+  document.getElementById('edit-continue').disabled = (editCount === 0);
+}
+
+function discardEdits() {
+  if (Object.keys(state.edits).length === 0) return;
+  if (!confirm('Discard all staged edits?')) return;
+  state.edits = {};
+  renderScorecard();
+  updateEditButtons();
+}
+
+// ============================================================
+//  HOLE MODAL
+// ============================================================
+function openHoleModal(holeNum) {
+  state.modalHole = holeNum;
+  const idx = holeNum - 1;
+  const original = state.roundData.grossHoles[idx];
+  const current = state.edits.hasOwnProperty(idx) ? state.edits[idx] : original;
+  state.modalScore = current;
+
+  document.getElementById('hole-modal-title').textContent = 'Hole ' + holeNum;
+  const hole = COURSE[idx];
+  const strokes = state.roundData.strokeAllocation[idx] || 0;
+  const hasHandicap = state.roundData.format !== 'Scramble' && state.roundData.handicap > 0;
+  let metaText = 'Par ' + hole.par + ' · ' + hole.yards + 'y · Hcp Index ' + hole.hcp;
+  if (hasHandicap && strokes > 0) {
+    metaText += ' · +' + strokes + ' stroke';
+  }
+  document.getElementById('hole-modal-meta').textContent = metaText;
+  document.getElementById('hole-modal-current').innerHTML = 'Current gross: <strong>' + original + '</strong>';
+
+  renderModalScore();
+  document.getElementById('hole-modal').classList.add('active');
+}
+
+function closeHoleModal() {
+  document.getElementById('hole-modal').classList.remove('active');
+  state.modalHole = null;
+  state.modalScore = null;
+}
+
+function adjustModalScore(delta) {
+  let s = state.modalScore + delta;
+  if (s < 1) s = 1;
+  if (s > 20) s = 20;
+  state.modalScore = s;
+  renderModalScore();
+}
+
+function renderModalScore() {
+  const idx = state.modalHole - 1;
+  const hole = COURSE[idx];
+  const gross = state.modalScore;
+  const net = computeNet(gross, idx);
+  const diff = net - hole.par;
+
+  const el = document.getElementById('modal-score');
+  el.textContent = gross;
+  el.classList.remove('under-par', 'over-par');
+
+  let resultLabel = '';
+  if (diff <= -2) { el.classList.add('under-par'); resultLabel = (diff === -2 ? 'Eagle' : 'Albatross') + ' (4 pts)'; }
+  else if (diff === -1) { el.classList.add('under-par'); resultLabel = 'Birdie (3 pts)'; }
+  else if (diff === 0) { resultLabel = 'Par (2 pts)'; }
+  else if (diff === 1) { el.classList.add('over-par'); resultLabel = 'Bogey (1 pt)'; }
+  else { el.classList.add('over-par'); resultLabel = diff === 2 ? 'Double (0 pts)' : 'Double+ (0 pts)'; }
+  document.getElementById('modal-result').textContent = resultLabel;
+
+  const netInfo = document.getElementById('modal-net-info');
+  if (net !== gross) {
+    netInfo.textContent = 'Net: ' + net + ' (gross ' + gross + ' − ' + (gross - net) + ' stroke)';
+  } else {
+    netInfo.textContent = '';
+  }
+
+  document.getElementById('modal-minus').disabled = gross <= 1;
+  document.getElementById('modal-plus').disabled = gross >= 20;
+}
+
+function saveHoleEdit() {
+  const idx = state.modalHole - 1;
+  const original = state.roundData.grossHoles[idx];
+  const newScore = state.modalScore;
+
+  if (newScore === original) {
+    // No change — remove from edits if it was there
+    delete state.edits[idx];
+  } else {
+    state.edits[idx] = newScore;
+  }
+
+  closeHoleModal();
+  renderScorecard();
+  updateEditButtons();
+}
+
+// ============================================================
+//  REASON SCREEN
+// ============================================================
+function goToReason() {
+  if (Object.keys(state.edits).length === 0) return;
+  state.reasonType = null;
+  document.getElementById('reason-note').value = '';
+  document.querySelectorAll('.reason-card').forEach(c => c.classList.remove('selected'));
+
+  // Build diff summary
+  const diffs = [];
+  Object.keys(state.edits).map(k => parseInt(k)).sort((a, b) => a - b).forEach(idx => {
+    const original = state.roundData.grossHoles[idx];
+    const newScore = state.edits[idx];
+    diffs.push('Hole ' + (idx + 1) + ': <strong>' + original + ' → ' + newScore + '</strong>');
+  });
+  document.getElementById('reason-diff-summary').innerHTML = diffs.join(' · ');
+
+  updateReasonSubmit();
+  showScreen('screen-reason');
+}
+
+function backToEdit() {
+  showScreen('screen-edit');
+}
+
+function selectReasonType(type) {
+  state.reasonType = type;
+  document.querySelectorAll('.reason-card').forEach(c => {
+    c.classList.toggle('selected', c.dataset.type === type);
+  });
+  updateReasonSubmit();
+}
+
+document.getElementById('reason-note').addEventListener('input', updateReasonSubmit);
+
+function updateReasonSubmit() {
+  const note = document.getElementById('reason-note').value.trim();
+  const ok = !!state.reasonType && note.length > 0;
+  document.getElementById('reason-submit').disabled = !ok;
+}
+
+async function submitAmendment() {
+  const note = document.getElementById('reason-note').value.trim();
+  if (!state.reasonType || !note) return;
+
+  // Build full newGrossHoles array (existing + edits)
+  const newGrossHoles = state.roundData.grossHoles.slice();
+  Object.keys(state.edits).forEach(k => {
+    newGrossHoles[parseInt(k)] = state.edits[k];
+  });
+
+  showScreen('screen-submitting');
+
+  try {
+    const payload = {
+      type: 'ADMIN_AMEND',
+      adminKey: state.adminKey,
+      teamId: state.selectedTeam.id,
+      roundNum: state.selectedRound,
+      newGrossHoles: newGrossHoles,
+      reasonType: state.reasonType,
+      reasonNote: note
+    };
+    const res = await fetch(WEB_APP_URL, {
+      method: 'POST', mode: 'cors',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.error || 'Submission failed');
+
+    document.getElementById('success-message').textContent =
+      data.diffCount + ' hole(s) updated · ' + data.totalPts + ' pts total · audit logged';
+    state.edits = {};
+    // Refresh round data so the edit screen shows the new state if user clicks "View this round"
+    await refreshRoundData();
+    showScreen('screen-success');
+  } catch (err) {
+    showError(err.message);
+  }
+}
+
+async function refreshRoundData() {
+  try {
+    const url = WEB_APP_URL + '?action=admin-round-data'
+      + '&teamId=' + encodeURIComponent(state.selectedTeam.id)
+      + '&roundNum=' + state.selectedRound
+      + '&adminKey=' + encodeURIComponent(state.adminKey);
+    const res = await fetch(url);
+    const data = await res.json();
+    if (data.ok) {
+      state.roundData = data;
+      renderEditScreen();
+    }
+  } catch (e) { /* non-fatal */ }
+}
+
+// ============================================================
+//  LIGHTBOX
+// ============================================================
+function openLightbox(url) {
+  document.getElementById('lightbox-img').src = url;
+  document.getElementById('lightbox').classList.add('active');
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('active');
+}
+
+// ============================================================
+//  UTIL
+// ============================================================
+function computeNet(gross, holeIdx) {
+  if (state.roundData.format === 'Scramble' || state.roundData.handicap <= 0) return gross;
+  const strokes = state.roundData.strokeAllocation[holeIdx] || 0;
+  return Math.max(1, gross - strokes);
+}
+
+function stablefordPts(net, par) {
+  const diff = net - par;
+  if (diff <= -2) return 4;
+  if (diff === -1) return 3;
+  if (diff === 0) return 2;
+  if (diff === 1) return 1;
+  return 0;
+}
+
+function driveThumb(url, size) {
+  const m = String(url).match(/\/d\/([^\/?]+)/);
+  if (m) return 'https://drive.google.com/thumbnail?id=' + m[1] + '&sz=w' + size;
+  return url;
+}
+
+function escapeHtml(str) {
+  if (str == null) return '';
+  return String(str)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+}
+
+function escapeAttr(str) {
+  return escapeHtml(str);
+}
+
+init();
+</script>
+</body>
+</html>
