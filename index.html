@@ -1,352 +1,344 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Lucky Cup</title>
 <style>
-
 :root {
-  --bg: #0d1410;
-  --card: #16221a;
-  --card-hover: #1d2a22;
-  --border: #2a3a30;
-  --text: #e8efe9;
-  --text-dim: #8a9a8d;
-  --green: #1A3C2A;
-  --green-bright: #2D5A3D;
+  --bg: #FAF9F6;
+  --surface: #FFFFFF;
+  --surface-warm: #F5F2EB;
+  --text: #1A1A1A;
+  --text-2: #5A5A5A;
+  --text-3: #9A9A9A;
   --gold: #B8860B;
-  --gold-bright: #D4A017;
-  --red: #c44;
-  --good: #6cc26c;
+  --gold-soft: #C9B273;
+  --gold-tint: rgba(184, 134, 11, 0.08);
+  --gold-tint-strong: rgba(184, 134, 11, 0.14);
+  --green: #2ECC71;
+  --green-deep: #248F4F;
+  --green-tint: rgba(46, 204, 113, 0.07);
+  --red: #DC503C;
+  --red-tint: rgba(220, 80, 60, 0.07);
+  --border: #EAEAE5;
+  --border-2: #F0EFE8;
+  --shadow: 0 1px 2px rgba(20,20,20,0.03), 0 6px 20px rgba(20,20,20,0.04);
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, Arial, sans-serif;
   background: var(--bg);
   color: var(--text);
-  line-height: 1.5;
-  padding: 20px 16px;
-  font-size: 14px;
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: "kern" 1, "liga" 1;
 }
-.container { max-width: 1100px; margin: 0 auto; }
+.container { max-width: 1180px; margin: 0 auto; padding: 56px 32px 80px; }
 
 /* HEADER */
-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 12px;
-  padding-bottom: 18px;
-  border-bottom: 2px solid var(--gold);
-  margin-bottom: 28px;
+.brand-header { margin-bottom: 64px; padding-bottom: 36px; border-bottom: 1px solid var(--border); }
+.brand-pre-label {
+  font-size: 11px; letter-spacing: 2.5px; color: var(--text-2);
+  text-transform: uppercase; font-weight: 600; margin-bottom: 20px;
 }
-.brand {
-  font-size: 28px;
-  font-weight: 800;
-  letter-spacing: 2px;
-  color: var(--gold);
+.brand-display {
+  font-size: 68px; font-weight: 900; letter-spacing: -0.025em;
+  line-height: 0.95; margin: 0 0 22px; color: var(--text);
+  position: relative; display: inline-block;
 }
-.brand-meta { color: var(--text-dim); font-size: 12px; }
-.status-badge {
-  padding: 6px 14px;
-  border-radius: 4px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
+.brand-display::after {
+  content: ""; position: absolute; left: 0; bottom: -14px;
+  width: 72px; height: 2px;
+  background: linear-gradient(90deg, var(--gold) 0%, var(--gold-soft) 60%, transparent 100%);
 }
-.status-badge.provisional { background: var(--gold); color: var(--bg); }
-.status-badge.confirmed   { background: var(--green-bright); color: white; }
-.status-badge.season-over { background: var(--green); color: var(--gold-bright); }
-.status-badge.awaiting    { background: var(--card); color: var(--text-dim); border: 1px solid var(--border); }
+.brand-meta-row {
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 16px; margin-top: 30px;
+}
+.brand-meta { font-size: 13px; color: var(--text-2); }
+
+.status-pill {
+  display: inline-block; padding: 7px 16px; border-radius: 100px;
+  font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+}
+.status-pill.provisional { background: var(--gold-tint); color: var(--gold); }
+.status-pill.confirmed   { background: var(--green-tint); color: var(--green-deep); }
+.status-pill.awaiting    { background: var(--surface-warm); color: var(--text-3); }
+.status-pill.final       { background: var(--text); color: var(--bg); }
 
 /* SECTIONS */
-section { margin-bottom: 32px; }
-h2 {
-  font-size: 12px;
-  letter-spacing: 2px;
-  color: var(--text-dim);
-  text-transform: uppercase;
-  margin: 0 0 12px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--border);
-  font-weight: 600;
+section { margin-bottom: 56px; }
+.section-label {
+  font-size: 11px; letter-spacing: 2.5px; color: var(--text-3);
+  text-transform: uppercase; font-weight: 600; margin-bottom: 22px;
+  display: flex; align-items: center; gap: 14px;
+}
+.section-label::after {
+  content: ""; flex: 1; height: 1px; background: var(--border);
 }
 
-/* IN-PROGRESS TICKER */
+/* IN PROGRESS */
 .in-progress-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 10px;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;
 }
 .in-progress-card {
-  background: var(--card);
-  border: 1px solid var(--gold);
-  border-radius: 6px;
-  padding: 12px 14px;
-  position: relative;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+  padding: 20px 22px 20px 26px; box-shadow: var(--shadow); position: relative; overflow: hidden;
 }
 .in-progress-card::before {
-  content: "● LIVE";
-  position: absolute;
-  top: 10px;
-  right: 12px;
-  font-size: 10px;
-  letter-spacing: 1px;
-  color: var(--gold-bright);
-  font-weight: 700;
+  content: ""; position: absolute; left: 0; top: 18px; bottom: 18px;
+  width: 3px; background: var(--green); border-radius: 0 3px 3px 0;
 }
-.in-progress-team { font-weight: 700; margin-bottom: 4px; }
-.in-progress-round { color: var(--text-dim); font-size: 13px; }
+.live-label {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: 10px; letter-spacing: 1.8px; color: var(--green-deep);
+  text-transform: uppercase; font-weight: 700; margin-bottom: 10px;
+}
+.live-dot {
+  width: 6px; height: 6px; background: var(--green); border-radius: 50%;
+  animation: pulse 1.8s infinite;
+}
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+.in-progress-team { font-weight: 700; font-size: 17px; margin-bottom: 4px; }
+.in-progress-round { color: var(--text-2); font-size: 13px; }
 
 /* TABLES */
+.table-wrap {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+  overflow: hidden; box-shadow: var(--shadow);
+}
 table { width: 100%; border-collapse: collapse; }
 th {
-  text-align: left;
-  padding: 10px 8px;
-  font-size: 11px;
-  letter-spacing: 1px;
-  color: var(--text-dim);
-  text-transform: uppercase;
-  border-bottom: 1px solid var(--border);
-  font-weight: 600;
+  text-align: left; padding: 16px 20px; font-size: 10px; letter-spacing: 1.8px;
+  color: var(--text-3); text-transform: uppercase; font-weight: 600;
+  border-bottom: 1px solid var(--border); background: var(--surface-warm);
 }
-td {
-  padding: 12px 8px;
-  border-bottom: 1px solid var(--border);
-  font-size: 14px;
-  vertical-align: middle;
+td { padding: 18px 20px; border-bottom: 1px solid var(--border-2); font-size: 14px; vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+
+tr.rank-1 td { background: var(--gold-tint); }
+tr.rank-1 td:first-child {
+  border-left: 3px solid var(--gold); padding-left: 17px;
 }
-tr.rank-1 {
-  background: rgba(184, 134, 11, 0.08);
-  border-left: 3px solid var(--gold);
-}
-.rank { font-weight: 700; color: var(--gold); text-align: center; }
-.rank-empty { color: var(--text-dim); text-align: center; }
+tr.rank-1 .rank-num { color: var(--gold); }
+
+.rank-num { font-weight: 800; font-size: 17px; color: var(--text); }
+.rank-empty { color: var(--text-3); font-size: 17px; }
+.team-name { font-weight: 600; font-size: 15px; }
 .center { text-align: center; }
 .right  { text-align: right; }
-.projected { font-weight: 700; }
-.payout { color: var(--gold-bright); font-weight: 700; }
-.payout-zero { color: var(--text-dim); }
+.muted  { color: var(--text-3); }
 
-.pace { font-size: 11px; letter-spacing: 1px; font-weight: 700; }
-.pace-on     { color: var(--good); }
-.pace-behind { color: var(--red); }
-.pace-ahead  { color: var(--gold-bright); }
+.projected { font-weight: 700; font-size: 16px; }
+.payout { color: var(--gold); font-weight: 700; }
+.payout-zero { color: var(--text-3); }
 
-.skin-status-pending  { color: var(--text-dim); font-size: 11px; letter-spacing: 1px; }
-.skin-status-settled  { color: var(--good); font-size: 11px; letter-spacing: 1px; }
+.pace {
+  display: inline-block; font-size: 10px; letter-spacing: 1.8px;
+  font-weight: 700; padding: 4px 11px; border-radius: 100px; text-transform: uppercase;
+}
+.pace-on     { background: var(--green-tint); color: var(--green-deep); }
+.pace-behind { background: var(--red-tint); color: var(--red); }
+.pace-ahead  { background: var(--gold-tint); color: var(--gold); }
+.pace-empty  { color: var(--text-3); font-size: 14px; }
+
+.skin-status {
+  font-size: 10px; letter-spacing: 1.8px; font-weight: 700; text-transform: uppercase;
+}
+.skin-status-pending { color: var(--text-3); }
+.skin-status-settled { color: var(--green-deep); }
 
 /* REELS */
-.reels-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
+.reels-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+.reel-column-label {
+  font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+  font-weight: 700; margin-bottom: 16px;
 }
-.reel-column h2 { display: flex; align-items: center; gap: 8px; }
-.reel-column.lucky h2::before   { content: "▲"; color: var(--good); }
-.reel-column.unlucky h2::before { content: "▼"; color: var(--gold-bright); }
+.reel-column.lucky   .reel-column-label { color: var(--green-deep); }
+.reel-column.unlucky .reel-column-label { color: var(--gold); }
+
 .reel-card {
-  background: var(--card);
-  border-radius: 6px;
-  padding: 14px;
-  margin-bottom: 10px;
-  border-left: 3px solid var(--border);
+  background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+  padding: 20px 24px 20px 26px; margin-bottom: 14px;
+  box-shadow: var(--shadow); position: relative; overflow: hidden;
 }
-.reel-column.lucky   .reel-card { border-left-color: var(--good); }
-.reel-column.unlucky .reel-card { border-left-color: var(--gold-bright); }
+.reel-card::before {
+  content: ""; position: absolute; left: 0; top: 18px; bottom: 18px;
+  width: 3px; border-radius: 0 3px 3px 0;
+}
+.reel-column.lucky   .reel-card::before { background: var(--green); }
+.reel-column.unlucky .reel-card::before { background: var(--gold-soft); }
+
 .reel-meta {
-  font-size: 11px;
-  color: var(--text-dim);
-  letter-spacing: 0.5px;
-  margin-bottom: 4px;
+  font-size: 10px; color: var(--text-3); letter-spacing: 1.5px;
+  margin-bottom: 8px; text-transform: uppercase; font-weight: 600;
 }
-.reel-result { font-weight: 700; margin-bottom: 6px; font-size: 14px; }
-.reel-column.lucky   .reel-result { color: var(--good); }
-.reel-column.unlucky .reel-result { color: var(--gold-bright); }
-.reel-caption {
-  font-style: italic;
-  color: var(--text);
-  font-size: 13.5px;
-  line-height: 1.5;
-}
-.reel-caption-empty {
-  color: var(--text-dim);
-  font-size: 12px;
-  font-style: italic;
-}
+.reel-result { font-weight: 700; font-size: 15px; margin-bottom: 10px; color: var(--text); }
+.reel-caption { color: var(--text); font-size: 15px; line-height: 1.55; font-style: italic; }
+.reel-caption-empty { color: var(--text-3); font-size: 13px; font-style: italic; }
 .reel-empty {
-  color: var(--text-dim);
-  font-style: italic;
-  padding: 14px;
-  text-align: center;
-  border: 1px dashed var(--border);
-  border-radius: 6px;
+  background: var(--surface); color: var(--text-3); font-style: italic;
+  padding: 32px; text-align: center; border-radius: 12px;
+  border: 1px dashed var(--border); font-size: 14px;
 }
 
 /* FOOTER */
-footer {
-  margin-top: 40px;
-  padding-top: 20px;
-  border-top: 1px solid var(--border);
-  text-align: center;
-  color: var(--text-dim);
-  font-size: 12px;
+.dashboard-footer {
+  margin-top: 80px; padding-top: 28px; border-top: 1px solid var(--border);
+  text-align: center; color: var(--text-3); font-size: 12px; letter-spacing: 0.5px;
 }
 
 /* MOBILE */
-@media (max-width: 720px) {
-  body { padding: 16px 12px; font-size: 13px; }
-  .brand { font-size: 22px; letter-spacing: 1.5px; }
-  .reels-grid { grid-template-columns: 1fr; }
+@media (max-width: 760px) {
+  .container { padding: 36px 20px 60px; }
+  .brand-display { font-size: 42px; }
+  .reels-grid { grid-template-columns: 1fr; gap: 28px; }
+  table { font-size: 13px; }
+  td, th { padding: 12px 12px; }
+  .in-progress-card, .reel-card { padding: 18px 20px 18px 22px; }
   .hide-mobile { display: none; }
-  table { font-size: 12px; }
-  td, th { padding: 8px 6px; }
 }
-
 </style>
 </head>
 <body>
 <div class="container">
-  <header>
-  <div>
-    <div class="brand">THE LUCKY CUP</div>
-    <div class="brand-meta">Fox Creek · Blue Tees · Season ends Aug 31, 2026 · Updated May 27, 9:04 AM</div>
+<header class="brand-header">
+  <div class="brand-pre-label">Lucky Golf · 2026 Season</div>
+  <h1 class="brand-display">The Lucky Cup</h1>
+  <div class="brand-meta-row">
+    <span class="brand-meta">Fox Creek · Blue Tees · Updated May 27, 9:20 AM</span>
+    <span class="status-pill awaiting">Awaiting Round 1</span>
   </div>
-  <div class="status-badge awaiting">AWAITING ROUND 1</div>
 </header>
-  
-  <section>
-  <h2>Leaderboard</h2>
-  <table>
-    <thead>
-      <tr>
-        <th class="center">#</th>
-        <th>Team</th>
-        <th class="center">Played</th>
-        <th class="center">Pts</th>
-        <th class="center hide-mobile">Avg</th>
-        <th class="center">Projected</th>
-        <th class="center">Pace</th>
-        <th class="right">Payout</th>
-      </tr>
-    </thead>
-    <tbody><tr class="">
-  <td class="rank-empty">—</td>
-  <td>Cole / Sean</td>
+
+<section>
+  <div class="section-label">Leaderboard</div>
+  <div class="table-wrap"><table>
+  <thead><tr>
+    <th>#</th>
+    <th>Team</th>
+    <th class="center">Played</th>
+    <th class="center">Pts</th>
+    <th class="center">Avg</th>
+    <th class="center">Projected</th>
+    <th class="center">Pace</th>
+    <th class="right">Payout</th>
+  </tr></thead>
+  <tbody><tr class="">
+  <td><span class="rank-empty">—</span></td>
+  <td class="team-name">Cole / Sean</td>
   <td class="center">0/9</td>
   <td class="center">0</td>
-  <td class="center hide-mobile">—</td>
+  <td class="center">—</td>
   <td class="center projected">—</td>
-  <td class="center pace pace-on">ON PACE</td>
+  <td class="center"><span class="pace-empty">—</span></td>
   <td class="right payout-zero">—</td>
 </tr><tr class="">
-  <td class="rank-empty">—</td>
-  <td>Bryce / Kaitlyn</td>
+  <td><span class="rank-empty">—</span></td>
+  <td class="team-name">Bryce / Kaitlyn</td>
   <td class="center">0/9</td>
   <td class="center">0</td>
-  <td class="center hide-mobile">—</td>
+  <td class="center">—</td>
   <td class="center projected">—</td>
-  <td class="center pace pace-on">ON PACE</td>
+  <td class="center"><span class="pace-empty">—</span></td>
   <td class="right payout-zero">—</td>
 </tr></tbody>
-  </table>
+  </table></div>
 </section>
-  <section>
-  <h2>Skins</h2>
-  <table>
-    <thead>
-      <tr>
-        <th class="center">Round</th>
-        <th class="hide-mobile">Format</th>
-        <th class="center">Pot</th>
-        <th>Winner</th>
-        <th class="center hide-mobile">Payout</th>
-        <th class="center">Status</th>
-      </tr>
-    </thead>
-    <tbody><tr>
-  <td class="center">1</td>
-  <td class="hide-mobile">Scramble</td>
-  <td class="center">—</td>
-  <td>—</td>
-  <td class="center hide-mobile">—</td>
-  <td class="center skin-status-pending">PENDING</td>
+<section>
+  <div class="section-label">Skins</div>
+  <div class="table-wrap"><table>
+  <thead><tr>
+    <th>Round</th>
+    <th>Format</th>
+    <th class="center">Pot</th>
+    <th>Winner</th>
+    <th class="right">Payout</th>
+    <th class="right">Status</th>
+  </tr></thead>
+  <tbody><tr>
+  <td><span class="rank-num">1</span></td>
+  <td>Scramble</td>
+  <td class="center muted">—</td>
+  <td class="muted">—</td>
+  <td class="right muted">—</td>
+  <td class="right"><span class="skin-status skin-status-pending">Pending</span></td>
 </tr><tr>
-  <td class="center">2</td>
-  <td class="hide-mobile">Shamble</td>
-  <td class="center">—</td>
-  <td>—</td>
-  <td class="center hide-mobile">—</td>
-  <td class="center skin-status-pending">PENDING</td>
+  <td><span class="rank-num">2</span></td>
+  <td>Shamble</td>
+  <td class="center muted">—</td>
+  <td class="muted">—</td>
+  <td class="right muted">—</td>
+  <td class="right"><span class="skin-status skin-status-pending">Pending</span></td>
 </tr><tr>
-  <td class="center">3</td>
-  <td class="hide-mobile">Best Ball</td>
-  <td class="center">—</td>
-  <td>—</td>
-  <td class="center hide-mobile">—</td>
-  <td class="center skin-status-pending">PENDING</td>
+  <td><span class="rank-num">3</span></td>
+  <td>Best Ball</td>
+  <td class="center muted">—</td>
+  <td class="muted">—</td>
+  <td class="right muted">—</td>
+  <td class="right"><span class="skin-status skin-status-pending">Pending</span></td>
 </tr><tr>
-  <td class="center">4</td>
-  <td class="hide-mobile">Scramble</td>
-  <td class="center">—</td>
-  <td>—</td>
-  <td class="center hide-mobile">—</td>
-  <td class="center skin-status-pending">PENDING</td>
+  <td><span class="rank-num">4</span></td>
+  <td>Scramble</td>
+  <td class="center muted">—</td>
+  <td class="muted">—</td>
+  <td class="right muted">—</td>
+  <td class="right"><span class="skin-status skin-status-pending">Pending</span></td>
 </tr><tr>
-  <td class="center">5</td>
-  <td class="hide-mobile">Shamble</td>
-  <td class="center">—</td>
-  <td>—</td>
-  <td class="center hide-mobile">—</td>
-  <td class="center skin-status-pending">PENDING</td>
+  <td><span class="rank-num">5</span></td>
+  <td>Shamble</td>
+  <td class="center muted">—</td>
+  <td class="muted">—</td>
+  <td class="right muted">—</td>
+  <td class="right"><span class="skin-status skin-status-pending">Pending</span></td>
 </tr><tr>
-  <td class="center">6</td>
-  <td class="hide-mobile">Best Ball</td>
-  <td class="center">—</td>
-  <td>—</td>
-  <td class="center hide-mobile">—</td>
-  <td class="center skin-status-pending">PENDING</td>
+  <td><span class="rank-num">6</span></td>
+  <td>Best Ball</td>
+  <td class="center muted">—</td>
+  <td class="muted">—</td>
+  <td class="right muted">—</td>
+  <td class="right"><span class="skin-status skin-status-pending">Pending</span></td>
 </tr><tr>
-  <td class="center">7</td>
-  <td class="hide-mobile">Scramble</td>
-  <td class="center">—</td>
-  <td>—</td>
-  <td class="center hide-mobile">—</td>
-  <td class="center skin-status-pending">PENDING</td>
+  <td><span class="rank-num">7</span></td>
+  <td>Scramble</td>
+  <td class="center muted">—</td>
+  <td class="muted">—</td>
+  <td class="right muted">—</td>
+  <td class="right"><span class="skin-status skin-status-pending">Pending</span></td>
 </tr><tr>
-  <td class="center">8</td>
-  <td class="hide-mobile">Shamble</td>
-  <td class="center">—</td>
-  <td>—</td>
-  <td class="center hide-mobile">—</td>
-  <td class="center skin-status-pending">PENDING</td>
+  <td><span class="rank-num">8</span></td>
+  <td>Shamble</td>
+  <td class="center muted">—</td>
+  <td class="muted">—</td>
+  <td class="right muted">—</td>
+  <td class="right"><span class="skin-status skin-status-pending">Pending</span></td>
 </tr><tr>
-  <td class="center">9</td>
-  <td class="hide-mobile">Best Ball</td>
-  <td class="center">—</td>
-  <td>—</td>
-  <td class="center hide-mobile">—</td>
-  <td class="center skin-status-pending">PENDING</td>
+  <td><span class="rank-num">9</span></td>
+  <td>Best Ball</td>
+  <td class="center muted">—</td>
+  <td class="muted">—</td>
+  <td class="right muted">—</td>
+  <td class="right"><span class="skin-status skin-status-pending">Pending</span></td>
 </tr></tbody>
-  </table>
+  </table></div>
 </section>
-  <section>
+<section>
   <div class="reels-grid">
     <div class="reel-column lucky">
-      <h2>Lucky Reel</h2>
-      <div class="reel-empty">No Lucky events yet. Make some birdies.</div>
-    </div>
+  <div class="reel-column-label">Lucky Reel</div>
+  <div class="reel-empty">No Lucky events yet. Make some birdies.</div>
+</div>
     <div class="reel-column unlucky">
-      <h2>Unlucky Reel</h2>
-      <div class="reel-empty">No Unlucky events yet. Give it time.</div>
-    </div>
+  <div class="reel-column-label">Unlucky Reel</div>
+  <div class="reel-empty">No Unlucky events yet. Give it time.</div>
+</div>
   </div>
 </section>
-  <footer>
-  0 rounds completed · Last updated May 27, 2026 · 9:04 AM
+<footer class="dashboard-footer">
+  0 rounds completed · Last updated May 27, 2026 · 9:20 AM
 </footer>
 </div>
 </body>
