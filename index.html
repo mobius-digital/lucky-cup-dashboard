@@ -6,48 +6,30 @@
 <title>The Lucky Cup</title>
 <style>
 :root {
-  --bg: #FAF9F6;
-  --surface: #FFFFFF;
-  --surface-warm: #F5F2EB;
-  --text: #1A1A1A;
-  --text-2: #5A5A5A;
-  --text-3: #6B6B6B;
-  --text-faint: #A8A8A8;
-  --gold: #B8860B;
-  --gold-soft: #C9B273;
-  --gold-tint: rgba(184, 134, 11, 0.08);
-  --gold-tint-strong: rgba(184, 134, 11, 0.18);
-  --gold-glow: rgba(184, 134, 11, 0.22);
-  --green: #2ECC71;
-  --green-deep: #248F4F;
-  --green-tint: rgba(46, 204, 113, 0.07);
-  --red: #DC503C;
-  --red-tint: rgba(220, 80, 60, 0.07);
-  --border: #EAEAE5;
-  --border-2: #F0EFE8;
+  --bg: #FAF9F6; --surface: #FFFFFF; --surface-warm: #F5F2EB;
+  --text: #1A1A1A; --text-2: #5A5A5A; --text-3: #6B6B6B; --text-faint: #A8A8A8;
+  --gold: #B8860B; --gold-soft: #C9B273;
+  --gold-tint: rgba(184,134,11,0.08); --gold-tint-strong: rgba(184,134,11,0.18);
+  --green: #2ECC71; --green-deep: #248F4F; --green-tint: rgba(46,204,113,0.07);
+  --red: #DC503C; --red-tint: rgba(220,80,60,0.07);
+  --border: #EAEAE5; --border-2: #F0EFE8;
   --shadow: 0 1px 2px rgba(20,20,20,0.03), 0 6px 20px rgba(20,20,20,0.04);
   --shadow-lift: 0 2px 4px rgba(20,20,20,0.04), 0 12px 32px rgba(20,20,20,0.06);
   --shadow-trophy: 0 4px 8px rgba(184,134,11,0.06), 0 20px 60px rgba(184,134,11,0.1);
+  --shadow-modal: 0 24px 80px rgba(0,0,0,0.28), 0 6px 20px rgba(0,0,0,0.16);
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
 body {
-  background: var(--bg);
-  color: var(--text);
+  background: var(--bg); color: var(--text);
   font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", system-ui, sans-serif;
-  font-size: 15px;
-  line-height: 1.55;
-  -webkit-font-smoothing: antialiased;
-  font-feature-settings: "kern" 1, "liga" 1;
+  font-size: 15px; line-height: 1.55; -webkit-font-smoothing: antialiased;
 }
 .container { max-width: 1180px; margin: 0 auto; padding: 56px 32px 80px; }
 
 /* HEADER */
 .brand-header { margin-bottom: 40px; padding-bottom: 36px; border-bottom: 1px solid var(--border); }
-.brand-pre-label {
-  font-size: 11px; letter-spacing: 2.5px; color: var(--text-2);
-  text-transform: uppercase; font-weight: 600; margin-bottom: 20px;
-}
+.brand-pre-label { font-size: 11px; letter-spacing: 2.5px; color: var(--text-2); text-transform: uppercase; font-weight: 600; margin-bottom: 20px; }
 .brand-display {
   font-size: 68px; font-weight: 900; letter-spacing: -0.025em;
   line-height: 0.95; margin: 0 0 22px; color: var(--text);
@@ -58,359 +40,327 @@ body {
   width: 72px; height: 2px;
   background: linear-gradient(90deg, var(--gold) 0%, var(--gold-soft) 60%, transparent 100%);
 }
-.brand-meta-row {
-  display: flex; justify-content: space-between; align-items: center;
-  flex-wrap: wrap; gap: 16px; margin-top: 30px;
-}
+.brand-meta-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-top: 30px; }
 .brand-meta { font-size: 13px; color: var(--text-2); }
+.status-pill { display: inline-block; padding: 7px 16px; border-radius: 100px; font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
+.status-pill.confirmed { background: var(--green-tint); color: var(--green-deep); }
+.status-pill.awaiting  { background: var(--surface-warm); color: var(--text-3); }
+.status-pill.final     { background: var(--text); color: var(--bg); }
 
-.status-pill {
-  display: inline-block; padding: 7px 16px; border-radius: 100px;
-  font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
-}
-.status-pill.provisional { background: var(--gold-tint); color: var(--gold); }
-.status-pill.confirmed   { background: var(--green-tint); color: var(--green-deep); }
-.status-pill.awaiting    { background: var(--surface-warm); color: var(--text-3); }
-.status-pill.final       { background: var(--text); color: var(--bg); }
-
-/* CHAMPION CARD */
+/* CHAMPION + RUNNERS-UP + SUPERLATIVES */
 .champion-section { margin-bottom: 32px; }
 .champion-card {
   background: linear-gradient(180deg, var(--surface) 0%, var(--gold-tint) 100%);
-  border: 1px solid var(--gold);
-  border-radius: 18px;
-  padding: 64px 40px 56px;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
+  border: 1px solid var(--gold); border-radius: 18px;
+  padding: 64px 40px 56px; text-align: center; position: relative; overflow: hidden;
   box-shadow: var(--shadow-trophy);
 }
-.champion-card::before {
-  content: ""; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-  width: 120px; height: 4px; background: var(--gold);
-  border-radius: 0 0 4px 4px;
-}
-.champion-pre-label {
-  font-size: 11px; letter-spacing: 3.5px; text-transform: uppercase;
-  font-weight: 700; color: var(--gold); margin-bottom: 22px;
-}
-.champion-team {
-  font-size: 72px; font-weight: 900; letter-spacing: -0.025em;
-  line-height: 1; color: var(--text); margin-bottom: 14px;
-  display: inline-flex; align-items: center; gap: 18px;
-}
+.champion-card::before { content: ""; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 120px; height: 4px; background: var(--gold); border-radius: 0 0 4px 4px; }
+.champion-pre-label { font-size: 11px; letter-spacing: 3.5px; text-transform: uppercase; font-weight: 700; color: var(--gold); margin-bottom: 22px; }
+.champion-team { font-size: 72px; font-weight: 900; letter-spacing: -0.025em; line-height: 1; color: var(--text); margin-bottom: 14px; display: inline-flex; align-items: center; gap: 18px; }
 .champion-team .team-dot { width: 18px; height: 18px; }
-.champion-players {
-  font-size: 17px; color: var(--text-2); margin-bottom: 32px;
-  letter-spacing: 0.3px;
-}
-.champion-payout {
-  font-size: 56px; font-weight: 800; color: var(--gold);
-  letter-spacing: -0.02em; line-height: 1; margin-bottom: 14px;
-}
-.champion-stats {
-  font-size: 12px; color: var(--text-3); letter-spacing: 2px;
-  text-transform: uppercase; font-weight: 600;
-}
+.champion-players { font-size: 17px; color: var(--text-2); margin-bottom: 32px; letter-spacing: 0.3px; }
+.champion-payout { font-size: 56px; font-weight: 800; color: var(--gold); letter-spacing: -0.02em; line-height: 1; margin-bottom: 14px; }
+.champion-stats { font-size: 12px; color: var(--text-3); letter-spacing: 2px; text-transform: uppercase; font-weight: 600; }
 
-/* RUNNERS-UP */
 .runners-up-section { margin-bottom: 56px; }
-.runners-up {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 16px;
-}
-.runner-card {
-  background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
-  padding: 26px 28px; box-shadow: var(--shadow); position: relative;
-}
-.runner-rank-label {
-  font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase;
-  font-weight: 700; color: var(--text-3); margin-bottom: 12px;
-}
-.runner-team-name {
-  font-size: 24px; font-weight: 800; margin-bottom: 8px;
-  display: flex; align-items: center; letter-spacing: -0.01em;
-}
-.runner-pts {
-  font-size: 13px; color: var(--text-3); margin-bottom: 18px;
-  letter-spacing: 0.3px;
-}
-.runner-payout {
-  font-size: 28px; font-weight: 700; color: var(--gold);
-  letter-spacing: -0.01em;
-}
+.runners-up { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+.runner-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 26px 28px; box-shadow: var(--shadow); }
+.runner-rank-label { font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; font-weight: 700; color: var(--text-3); margin-bottom: 12px; }
+.runner-team-name { font-size: 24px; font-weight: 800; margin-bottom: 8px; display: flex; align-items: center; letter-spacing: -0.01em; }
+.runner-pts { font-size: 13px; color: var(--text-3); margin-bottom: 18px; }
+.runner-payout { font-size: 28px; font-weight: 700; color: var(--gold); letter-spacing: -0.01em; }
 
-/* SUPERLATIVES */
 .superlatives-section { margin-bottom: 56px; }
-.superlatives {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 14px;
-}
-.superlative-card {
-  background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
-  padding: 20px 22px; box-shadow: var(--shadow);
-}
-.superlative-label {
-  font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
-  color: var(--text-3); font-weight: 700; margin-bottom: 10px;
-}
-.superlative-team {
-  font-size: 15px; font-weight: 700;
-  display: flex; align-items: center; margin-bottom: 8px;
-}
-.superlative-value {
-  font-size: 24px; font-weight: 800; color: var(--gold);
-  letter-spacing: -0.02em; line-height: 1;
-}
-.superlative-sub {
-  font-size: 11px; color: var(--text-3);
-  letter-spacing: 0.3px; margin-top: 4px;
-}
+.superlatives { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+.superlative-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 22px; box-shadow: var(--shadow); }
+.superlative-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-3); font-weight: 700; margin-bottom: 10px; }
+.superlative-team { font-size: 15px; font-weight: 700; display: flex; align-items: center; margin-bottom: 8px; }
+.superlative-value { font-size: 24px; font-weight: 800; color: var(--gold); letter-spacing: -0.02em; line-height: 1; }
+.superlative-sub { font-size: 11px; color: var(--text-3); margin-top: 4px; }
 
 /* MONEY STRIP */
-.money-strip {
-  display: grid; grid-template-columns: 1fr 1fr 1fr;
-  background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
-  box-shadow: var(--shadow); margin-bottom: 40px; overflow: hidden;
-}
+.money-strip { display: grid; grid-template-columns: 1fr 1fr 1fr; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow); margin-bottom: 40px; overflow: hidden; }
 .money-stat { padding: 22px 26px; position: relative; }
 .money-stat + .money-stat { border-left: 1px solid var(--border-2); }
-.money-label {
-  font-size: 10px; letter-spacing: 2px; color: var(--text-3);
-  text-transform: uppercase; font-weight: 700; margin-bottom: 8px;
-}
-.money-value {
-  font-size: 28px; font-weight: 800; color: var(--text);
-  letter-spacing: -0.02em; line-height: 1;
-}
+.money-label { font-size: 10px; letter-spacing: 2px; color: var(--text-3); text-transform: uppercase; font-weight: 700; margin-bottom: 8px; }
+.money-value { font-size: 28px; font-weight: 800; color: var(--text); letter-spacing: -0.02em; line-height: 1; }
 .money-value.gold { color: var(--gold); }
 .money-sub { font-size: 12px; color: var(--text-3); margin-top: 6px; }
 
-/* SEASON PROGRESS */
+/* SEASON PROGRESS (now clickable) */
 .season-progress { margin-bottom: 56px; }
+.progress-hint { font-size: 11px; color: var(--text-3); margin-top: 10px; font-style: italic; }
 .progress-bar { display: grid; grid-template-columns: repeat(9, 1fr); gap: 6px; }
 .round-seg {
   position: relative; height: 44px;
   background: var(--surface); border: 1px solid var(--border);
-  border-radius: 7px; overflow: hidden;
-  transition: border-color 0.3s ease;
+  border-radius: 7px; overflow: hidden; cursor: pointer;
+  transition: border-color 0.2s ease, transform 0.12s ease, box-shadow 0.2s ease;
 }
-.round-fill {
-  position: absolute; left: 0; bottom: 0; top: 0;
-  background: var(--gold-tint-strong);
-  transition: width 0.6s ease;
-}
-.round-num {
-  position: absolute; top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 13px; font-weight: 700; color: var(--text-2); z-index: 2;
-}
+.round-seg:hover { border-color: var(--gold); transform: translateY(-1px); box-shadow: var(--shadow); }
+.round-fill { position: absolute; left: 0; bottom: 0; top: 0; background: var(--gold-tint-strong); transition: width 0.6s ease; }
+.round-num { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 13px; font-weight: 700; color: var(--text-2); z-index: 2; }
 .round-seg.complete { border-color: var(--gold); }
 .round-seg.complete .round-num { color: var(--gold); }
 .round-seg.partial .round-num { color: var(--text); }
 
 /* SECTIONS */
 section { margin-bottom: 56px; }
-.section-label {
-  font-size: 11px; letter-spacing: 2.5px; color: var(--text-3);
-  text-transform: uppercase; font-weight: 700; margin-bottom: 22px;
-  display: flex; align-items: center; gap: 14px;
-}
+.section-label { font-size: 11px; letter-spacing: 2.5px; color: var(--text-3); text-transform: uppercase; font-weight: 700; margin-bottom: 22px; display: flex; align-items: center; gap: 14px; }
 .section-label::after { content: ""; flex: 1; height: 1px; background: var(--border); }
 
 /* TEAM DOT */
-.team-dot {
-  display: inline-block; width: 10px; height: 10px;
-  border-radius: 50%; margin-right: 10px;
-  vertical-align: middle; flex-shrink: 0;
-}
+.team-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 10px; vertical-align: middle; flex-shrink: 0; }
 .team-name-wrap { display: inline-flex; align-items: center; gap: 0; }
 
 /* IN PROGRESS */
-.in-progress-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;
-}
+.in-progress-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
 .in-progress-card {
   background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
   padding: 20px 22px 20px 26px; box-shadow: var(--shadow); position: relative; overflow: hidden;
+  cursor: pointer; transition: transform 0.12s ease, box-shadow 0.2s ease;
 }
-.in-progress-card::before {
-  content: ""; position: absolute; left: 0; top: 18px; bottom: 18px;
-  width: 3px; background: var(--green); border-radius: 0 3px 3px 0;
-}
-.live-label {
-  display: inline-flex; align-items: center; gap: 7px;
-  font-size: 10px; letter-spacing: 1.8px; color: var(--green-deep);
-  text-transform: uppercase; font-weight: 700; margin-bottom: 10px;
-}
-.live-dot {
-  width: 6px; height: 6px; background: var(--green); border-radius: 50%;
-  animation: pulse 1.8s infinite;
-}
+.in-progress-card:hover { transform: translateY(-1px); box-shadow: var(--shadow-lift); }
+.in-progress-card::before { content: ""; position: absolute; left: 0; top: 18px; bottom: 18px; width: 3px; background: var(--green); border-radius: 0 3px 3px 0; }
+.live-label { display: inline-flex; align-items: center; gap: 7px; font-size: 10px; letter-spacing: 1.8px; color: var(--green-deep); text-transform: uppercase; font-weight: 700; margin-bottom: 10px; }
+.live-dot { width: 6px; height: 6px; background: var(--green); border-radius: 50%; animation: pulse 1.8s infinite; }
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
 .in-progress-team { font-weight: 700; font-size: 17px; margin-bottom: 4px; display: flex; align-items: center; }
 .in-progress-round { color: var(--text-2); font-size: 13px; }
 
 /* TABLES */
-.table-wrap {
-  background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
-  overflow: hidden; box-shadow: var(--shadow);
-}
+.table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); }
 table { width: 100%; border-collapse: collapse; }
-th {
-  text-align: left; padding: 16px 20px; font-size: 10px; letter-spacing: 1.8px;
-  color: var(--text-3); text-transform: uppercase; font-weight: 700;
-  border-bottom: 1px solid var(--border); background: var(--surface-warm);
-}
+th { text-align: left; padding: 16px 20px; font-size: 10px; letter-spacing: 1.8px; color: var(--text-3); text-transform: uppercase; font-weight: 700; border-bottom: 1px solid var(--border); background: var(--surface-warm); vertical-align: top; }
+.th-sub { display: block; font-size: 9px; letter-spacing: 0.6px; color: var(--text-faint); text-transform: none; font-weight: 500; margin-top: 4px; font-style: italic; }
 td { padding: 18px 20px; border-bottom: 1px solid var(--border-2); font-size: 14px; vertical-align: middle; }
 tr:last-child td { border-bottom: none; }
 
+/* Leaderboard rows are clickable */
+tbody tr.team-row { cursor: pointer; transition: background 0.15s ease; }
+tbody tr.team-row:hover td { background: var(--surface-warm); }
+tbody tr.team-row.rank-1:hover td { background: var(--gold-tint-strong); }
+
 tr.rank-1 td { background: var(--gold-tint); }
-tr.rank-1 td:first-child {
-  border-left: 3px solid var(--gold); padding-left: 17px;
-}
+tr.rank-1 td:first-child { border-left: 3px solid var(--gold); padding-left: 17px; }
 tr.rank-1 .rank-num { color: var(--gold); }
 
 .rank-num { font-weight: 800; font-size: 17px; color: var(--text); }
 .rank-empty { color: var(--text-faint); font-size: 17px; }
 .team-name { font-weight: 600; font-size: 15px; }
-.center { text-align: center; }
-.right  { text-align: right; }
-.muted  { color: var(--text-faint); }
+.center { text-align: center; } .right { text-align: right; } .muted { color: var(--text-faint); }
 
 .projected { font-weight: 700; font-size: 16px; }
 .payout { color: var(--gold); font-weight: 700; }
 .payout-zero { color: var(--text-faint); }
 
-.pace {
-  display: inline-block; font-size: 10px; letter-spacing: 1.8px;
-  font-weight: 700; padding: 4px 11px; border-radius: 100px; text-transform: uppercase;
-}
+.pace { display: inline-block; font-size: 10px; letter-spacing: 1.8px; font-weight: 700; padding: 4px 11px; border-radius: 100px; text-transform: uppercase; }
 .pace-on     { background: var(--green-tint); color: var(--green-deep); }
 .pace-behind { background: var(--red-tint); color: var(--red); }
 .pace-ahead  { background: var(--gold-tint); color: var(--gold); }
 .pace-empty  { color: var(--text-faint); font-size: 14px; }
 
-.skin-status {
-  font-size: 10px; letter-spacing: 1.8px; font-weight: 700; text-transform: uppercase;
-}
+.skin-status { font-size: 10px; letter-spacing: 1.8px; font-weight: 700; text-transform: uppercase; }
 .skin-status-pending { color: var(--text-faint); }
+.skin-status-inplay  { color: var(--gold); }
 .skin-status-settled { color: var(--green-deep); }
 
-/* FORMAT GLYPHS */
 .format-cell { display: inline-flex; align-items: center; gap: 10px; }
-.format-glyph {
-  display: inline-block; width: 22px; height: 16px;
-  vertical-align: middle; color: var(--text-2); flex-shrink: 0;
-}
+.format-glyph { display: inline-block; width: 22px; height: 16px; vertical-align: middle; color: var(--text-2); flex-shrink: 0; }
 .format-label { font-size: 14px; color: var(--text); }
 
-/* SKINS WINNERS */
 .skins-winner-block { display: flex; flex-direction: column; gap: 4px; }
 .skins-winner-name { display: flex; align-items: center; font-weight: 600; }
-.skins-venmos {
-  font-size: 12px; color: var(--text-3);
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  letter-spacing: 0.2px;
-}
+.skins-venmos { font-size: 12px; color: var(--text-3); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 0.2px; }
+.skins-leader-note { font-size: 11px; color: var(--text-3); font-style: italic; letter-spacing: 0.2px; margin-top: 2px; }
 
 /* DRAMA OF THE WEEK */
-.drama-card {
-  background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
-  padding: 32px 36px; box-shadow: var(--shadow-lift); position: relative; overflow: hidden;
-}
-.drama-card::before {
-  content: ""; position: absolute; left: 0; top: 0; bottom: 0;
-  width: 4px; background: var(--gold);
-}
+.drama-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 32px 36px; box-shadow: var(--shadow-lift); position: relative; overflow: hidden; }
+.drama-card::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--gold); }
 .drama-card.unlucky::before { background: var(--gold-soft); }
 .drama-card.lucky::before   { background: var(--green); }
 .drama-header { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; flex-wrap: wrap; }
-.drama-type-pill {
-  display: inline-block; padding: 5px 12px; border-radius: 100px;
-  font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
-}
+.drama-type-pill { display: inline-block; padding: 5px 12px; border-radius: 100px; font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
 .drama-type-pill.lucky { background: var(--green-tint); color: var(--green-deep); }
 .drama-type-pill.unlucky { background: var(--gold-tint); color: var(--gold); }
-.drama-meta {
-  font-size: 11px; letter-spacing: 1.5px; color: var(--text-3);
-  text-transform: uppercase; font-weight: 600;
-}
-.drama-result {
-  font-size: 38px; font-weight: 900; letter-spacing: -0.02em;
-  color: var(--text); margin-bottom: 6px; line-height: 1.05;
-}
-.drama-team {
-  display: flex; align-items: center;
-  font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 16px;
-}
-.drama-caption {
-  font-size: 17px; line-height: 1.5; color: var(--text);
-  font-style: italic; max-width: 720px;
-}
+.drama-meta { font-size: 11px; letter-spacing: 1.5px; color: var(--text-3); text-transform: uppercase; font-weight: 600; }
+.drama-result { font-size: 38px; font-weight: 900; letter-spacing: -0.02em; color: var(--text); margin-bottom: 6px; line-height: 1.05; }
+.drama-team { display: flex; align-items: center; font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 16px; }
+.drama-caption { font-size: 17px; line-height: 1.5; color: var(--text); font-style: italic; max-width: 720px; }
 .drama-caption-empty { color: var(--text-3); font-size: 14px; font-style: italic; }
 
 /* REELS — CAROUSEL */
 .reels-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
-.reel-column-label {
-  font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
-  font-weight: 700; margin-bottom: 16px;
-}
+.reel-column-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; margin-bottom: 16px; }
 .reel-column.lucky   .reel-column-label { color: var(--green-deep); }
 .reel-column.unlucky .reel-column-label { color: var(--gold); }
-
-.reel-carousel {
-  position: relative; overflow: hidden;
-  background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
-  box-shadow: var(--shadow);
-}
+.reel-carousel { position: relative; overflow: hidden; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow); }
 .reel-track { display: flex; transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1); }
-.reel-card {
-  flex: 0 0 100%; min-width: 100%;
-  padding: 22px 26px 22px 28px; position: relative;
-}
-.reel-card::before {
-  content: ""; position: absolute; left: 0; top: 22px; bottom: 22px;
-  width: 3px; border-radius: 0 3px 3px 0;
-}
+.reel-card { flex: 0 0 100%; min-width: 100%; padding: 22px 26px 22px 28px; position: relative; }
+.reel-card::before { content: ""; position: absolute; left: 0; top: 22px; bottom: 22px; width: 3px; border-radius: 0 3px 3px 0; }
 .reel-column.lucky   .reel-card::before { background: var(--green); }
 .reel-column.unlucky .reel-card::before { background: var(--gold-soft); }
-
-.reel-meta {
-  display: flex; align-items: center; gap: 0;
-  font-size: 10px; color: var(--text-3); letter-spacing: 1.5px;
-  margin-bottom: 8px; text-transform: uppercase; font-weight: 700;
-}
+.reel-meta { display: flex; align-items: center; font-size: 10px; color: var(--text-3); letter-spacing: 1.5px; margin-bottom: 8px; text-transform: uppercase; font-weight: 700; }
 .reel-meta .team-dot { width: 8px; height: 8px; margin-right: 8px; }
 .reel-result { font-weight: 700; font-size: 15px; margin-bottom: 10px; color: var(--text); }
 .reel-caption { color: var(--text); font-size: 15px; line-height: 1.55; font-style: italic; }
 .reel-caption-empty { color: var(--text-3); font-size: 13px; font-style: italic; }
-
-.reel-dots {
-  display: flex; justify-content: center; align-items: center; gap: 6px;
-  padding: 12px 0 16px;
-  background: var(--surface); border-top: 1px solid var(--border-2);
-}
-.reel-dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: var(--border); border: none; padding: 0;
-  cursor: pointer; transition: all 0.25s ease;
-}
+.reel-dots { display: flex; justify-content: center; align-items: center; gap: 6px; padding: 12px 0 16px; background: var(--surface); border-top: 1px solid var(--border-2); }
+.reel-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border); border: none; padding: 0; cursor: pointer; transition: all 0.25s ease; }
 .reel-dot.active { width: 18px; border-radius: 3px; }
 .reel-column.lucky   .reel-dot.active { background: var(--green); }
 .reel-column.unlucky .reel-dot.active { background: var(--gold-soft); }
+.reel-empty { background: var(--surface); color: var(--text-3); font-style: italic; padding: 32px; text-align: center; border-radius: 12px; border: 1px dashed var(--border); font-size: 14px; }
 
-.reel-empty {
-  background: var(--surface); color: var(--text-3); font-style: italic;
-  padding: 32px; text-align: center; border-radius: 12px;
-  border: 1px dashed var(--border); font-size: 14px;
+.dashboard-footer { margin-top: 80px; padding-top: 28px; border-top: 1px solid var(--border); text-align: center; color: var(--text-3); font-size: 12px; letter-spacing: 0.5px; }
+
+/* ============================================================ */
+/*  MODAL SYSTEM                                                */
+/* ============================================================ */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(20, 20, 20, 0.6);
+  -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+  z-index: 100; padding: 40px 20px;
+  display: none; overflow-y: auto;
+  opacity: 0; transition: opacity 0.2s ease;
+}
+.modal-overlay.active { display: flex; align-items: flex-start; justify-content: center; opacity: 1; }
+.modal-card {
+  background: var(--bg); border-radius: 18px; max-width: 720px; width: 100%;
+  padding: 40px 36px 44px; position: relative;
+  box-shadow: var(--shadow-modal); margin: 0 auto;
+  animation: modalIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes modalIn { from { opacity: 0; transform: translateY(12px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+.modal-close {
+  position: absolute; top: 14px; right: 14px;
+  background: none; border: none; font-size: 26px; color: var(--text-2);
+  cursor: pointer; padding: 6px 14px; border-radius: 10px;
+  line-height: 1; font: inherit; font-weight: 300;
+}
+.modal-close:hover { background: var(--surface-warm); color: var(--text); }
+.modal-back {
+  background: none; border: none; color: var(--text-3);
+  font: inherit; font-size: 13px; padding: 4px 0; margin-bottom: 22px;
+  cursor: pointer; display: inline-flex; align-items: center;
+}
+.modal-back:hover { color: var(--text); }
+
+.modal-pre-label { font-size: 10px; letter-spacing: 2.5px; color: var(--text-3); text-transform: uppercase; font-weight: 700; margin-bottom: 12px; }
+.modal-title {
+  font-size: 36px; font-weight: 900; letter-spacing: -0.02em; line-height: 1.05;
+  display: flex; align-items: center; margin: 0 0 8px;
+}
+.modal-title .team-dot { width: 14px; height: 14px; margin-right: 12px; }
+.modal-subtitle { color: var(--text-2); font-size: 14px; margin-bottom: 28px; }
+
+.modal-stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 32px; }
+.modal-stat { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+.modal-stat-label { font-size: 9px; letter-spacing: 1.5px; color: var(--text-3); text-transform: uppercase; font-weight: 700; margin-bottom: 6px; }
+.modal-stat-value { font-size: 22px; font-weight: 800; color: var(--text); letter-spacing: -0.01em; line-height: 1; }
+
+.modal-section { margin-bottom: 32px; }
+.modal-section:last-child { margin-bottom: 0; }
+.modal-section-label { font-size: 10px; letter-spacing: 2px; color: var(--text-3); text-transform: uppercase; font-weight: 700; margin-bottom: 14px; }
+
+/* Timeline strip */
+.timeline { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 22px 24px; }
+.timeline-row { display: flex; align-items: flex-start; gap: 14px; }
+.timeline-bullet { width: 10px; height: 10px; border-radius: 50%; background: var(--gold); margin-top: 7px; flex-shrink: 0; }
+.timeline-bullet.green { background: var(--green); }
+.timeline-content { flex: 1; min-width: 0; }
+.timeline-head { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px; margin-bottom: 4px; }
+.timeline-event { font-weight: 700; color: var(--text); font-size: 14px; }
+.timeline-time { font-size: 12px; color: var(--text-3); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+.timeline-note { font-size: 14px; color: var(--text-2); font-style: italic; line-height: 1.5; margin-top: 6px; padding-left: 0; border-left: 2px solid var(--gold-soft); padding-left: 12px; margin-left: -2px; }
+.timeline-gap { font-size: 11px; color: var(--text-3); letter-spacing: 0.5px; padding: 12px 0 12px 24px; font-style: italic; }
+
+/* Scorecard table */
+.modal-scorecard { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+.modal-sc-9 { display: grid; grid-template-columns: 56px repeat(9, 1fr) 56px; }
+.modal-sc-9 + .modal-sc-9 { border-top: 1px solid var(--border); }
+.modal-sc-9 > div { padding: 9px 4px; font-size: 13px; text-align: center; border-bottom: 1px solid var(--border-2); }
+.modal-sc-9 > div:last-child { border-bottom: none; }
+.modal-sc-9 > div.sc-header { background: var(--surface-warm); font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; color: var(--text-3); border-bottom: 1px solid var(--border); }
+.modal-sc-9 > div.sc-label { font-weight: 700; color: var(--text-3); font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; }
+.modal-sc-9 > div.sc-tot { font-weight: 800; background: var(--surface-warm); color: var(--text); }
+.modal-sc-9 > div.sc-score-under { color: var(--green-deep); font-weight: 700; }
+.modal-sc-9 > div.sc-score-over { color: var(--red); }
+.modal-sc-9 > div.sc-pts-good { color: var(--gold); font-weight: 700; }
+
+/* Photo thumbs */
+.photo-thumbs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.photo-thumb {
+  position: relative; background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; overflow: hidden; cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.2s ease;
+  aspect-ratio: 4 / 3;
+}
+.photo-thumb:hover { transform: translateY(-2px); box-shadow: var(--shadow-lift); }
+.photo-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.photo-thumb-caption {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: linear-gradient(0deg, rgba(0,0,0,0.65), rgba(0,0,0,0));
+  color: white; padding: 18px 14px 10px;
+  font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700;
+}
+.photo-thumb-missing {
+  display: flex; align-items: center; justify-content: center;
+  background: var(--surface-warm); color: var(--text-3);
+  font-size: 12px; font-style: italic; aspect-ratio: 4 / 3;
+  border: 1px dashed var(--border); border-radius: 12px;
 }
 
-/* FOOTER */
-.dashboard-footer {
-  margin-top: 80px; padding-top: 28px; border-top: 1px solid var(--border);
-  text-align: center; color: var(--text-3); font-size: 12px; letter-spacing: 0.5px;
+/* Rounds list (Team Detail modal) */
+.rounds-list { display: grid; grid-template-columns: 1fr; gap: 8px; }
+.round-item {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+  padding: 14px 16px; display: grid; grid-template-columns: 40px 1fr auto;
+  align-items: center; gap: 14px;
+  cursor: pointer; border: none; font: inherit; text-align: left; width: 100%;
+  border: 1px solid var(--border); transition: border-color 0.15s, background 0.15s, transform 0.12s;
 }
+.round-item:hover { border-color: var(--gold); background: var(--surface-warm); transform: translateY(-1px); }
+.round-item.pending { cursor: default; opacity: 0.55; }
+.round-item.pending:hover { border-color: var(--border); background: var(--surface); transform: none; }
+.round-item-num { font-size: 20px; font-weight: 900; color: var(--text); }
+.round-item.pending .round-item-num { color: var(--text-faint); }
+.round-item-format { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+.round-item-status { font-size: 11px; color: var(--text-3); letter-spacing: 0.3px; }
+.round-item-pts { font-size: 18px; font-weight: 800; color: var(--gold); }
+.round-item.pending .round-item-pts { color: var(--text-faint); font-weight: 400; }
+
+/* Team status list (Round Status modal) */
+.team-status-list { display: grid; grid-template-columns: 1fr; gap: 8px; }
+.team-status-item {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+  padding: 14px 16px; display: grid; grid-template-columns: auto 1fr auto auto;
+  align-items: center; gap: 12px; font: inherit; text-align: left; width: 100%;
+  transition: border-color 0.15s, background 0.15s, transform 0.12s;
+}
+.team-status-item.clickable { cursor: pointer; }
+.team-status-item.clickable:hover { border-color: var(--gold); background: var(--surface-warm); transform: translateY(-1px); }
+.team-status-item .team-dot { margin-right: 0; }
+.team-status-name { font-weight: 600; font-size: 15px; }
+.team-status-pts { font-weight: 700; color: var(--gold); font-size: 14px; }
+.team-status-state { font-size: 10px; letter-spacing: 1.8px; text-transform: uppercase; font-weight: 700; }
+.team-status-state.completed { color: var(--green-deep); }
+.team-status-state.in-progress { color: var(--gold); }
+.team-status-state.pending { color: var(--text-faint); }
+
+.modal-skins-summary { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; font-size: 14px; color: var(--text-2); }
+.modal-skins-summary strong { color: var(--text); font-weight: 700; }
+
+/* Lightbox */
+.lightbox-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.9);
+  z-index: 200; display: none; align-items: center; justify-content: center;
+  padding: 32px; cursor: zoom-out;
+}
+.lightbox-overlay.active { display: flex; }
+.lightbox-overlay img { max-width: 100%; max-height: 100%; object-fit: contain; box-shadow: 0 12px 60px rgba(0,0,0,0.5); border-radius: 6px; }
 
 /* MOBILE */
 @media (max-width: 760px) {
@@ -436,24 +386,25 @@ tr.rank-1 .rank-num { color: var(--gold); }
   .in-progress-card { padding: 18px 20px 18px 22px; }
   .reel-card { padding: 20px 22px 20px 24px; }
   .hide-mobile { display: none; }
+
+  .modal-overlay { padding: 12px; }
+  .modal-card { padding: 28px 20px 32px; border-radius: 14px; }
+  .modal-title { font-size: 26px; }
+  .modal-stats-row { grid-template-columns: repeat(2, 1fr); }
+  .modal-sc-9 { grid-template-columns: 38px repeat(9, 1fr) 38px; font-size: 11px; }
+  .modal-sc-9 > div { padding: 7px 2px; font-size: 12px; }
+  .photo-thumbs-grid { grid-template-columns: 1fr; }
+  .team-status-item { grid-template-columns: auto 1fr auto; }
+  .team-status-item .team-status-state { grid-column: 1 / -1; padding-top: 4px; }
 }
 </style>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
-    <symbol id="glyph-scramble" viewBox="0 0 22 16">
-      <circle cx="11" cy="8" r="3.5" fill="currentColor"/>
-    </symbol>
-    <symbol id="glyph-shamble" viewBox="0 0 22 16">
-      <circle cx="5" cy="8" r="3" fill="currentColor"/>
-      <circle cx="16" cy="4.5" r="2" fill="currentColor" opacity="0.65"/>
-      <circle cx="16" cy="11.5" r="2" fill="currentColor" opacity="0.65"/>
-    </symbol>
-    <symbol id="glyph-bestball" viewBox="0 0 22 16">
-      <circle cx="6" cy="8" r="3" fill="currentColor"/>
-      <circle cx="16" cy="8" r="3" fill="currentColor"/>
-    </symbol>
+    <symbol id="glyph-scramble" viewBox="0 0 22 16"><circle cx="11" cy="8" r="3.5" fill="currentColor"/></symbol>
+    <symbol id="glyph-shamble" viewBox="0 0 22 16"><circle cx="5" cy="8" r="3" fill="currentColor"/><circle cx="16" cy="4.5" r="2" fill="currentColor" opacity="0.65"/><circle cx="16" cy="11.5" r="2" fill="currentColor" opacity="0.65"/></symbol>
+    <symbol id="glyph-bestball" viewBox="0 0 22 16"><circle cx="6" cy="8" r="3" fill="currentColor"/><circle cx="16" cy="8" r="3" fill="currentColor"/></symbol>
   </defs>
 </svg>
 <div class="container">
@@ -461,57 +412,46 @@ tr.rank-1 .rank-num { color: var(--gold); }
   <div class="brand-pre-label">Lucky Golf · 2026 Season</div>
   <h1 class="brand-display">The Lucky Cup</h1>
   <div class="brand-meta-row">
-    <span class="brand-meta">Fox Creek · Blue Tees · Updated May 27, 12:24 PM</span>
-    <span class="status-pill provisional">Provisional</span>
+    <span class="brand-meta">Fox Creek · Blue Tees · Updated May 27, 1:06 PM</span>
+    
   </div>
 </header>
 <div class="money-strip">
-  <div class="money-stat">
-    <div class="money-label">Main Pot</div>
-    <div class="money-value gold">$400</div>
-    <div class="money-sub">2 teams × $200 buy-in</div>
-  </div>
-  <div class="money-stat">
-    <div class="money-label">Skins Pot</div>
-    <div class="money-value">$360</div>
-    <div class="money-sub">$80 awarded</div>
-  </div>
-  <div class="money-stat">
-    <div class="money-label">Total Stakes</div>
-    <div class="money-value">$760</div>
-    <div class="money-sub">on the line this season</div>
-  </div>
+  <div class="money-stat"><div class="money-label">Main Pot</div><div class="money-value gold">$400</div><div class="money-sub">2 teams × $200 buy-in</div></div>
+  <div class="money-stat"><div class="money-label">Skins Pot</div><div class="money-value">$360</div><div class="money-sub">$80 awarded</div></div>
+  <div class="money-stat"><div class="money-label">Total Stakes</div><div class="money-value">$760</div><div class="money-sub">on the line this season</div></div>
 </div>
 <section class="season-progress">
   <div class="section-label">Season Progress</div>
-  <div class="progress-bar"><div class="round-seg complete" title="Round 1: 2/2 teams complete">
+  <div class="progress-bar"><div class="round-seg complete" title="Round 1: 2/2 teams complete · tap to see details" data-round-click="1">
       <div class="round-fill" style="width: 100%"></div>
       <div class="round-num">1</div>
-    </div><div class="round-seg partial" title="Round 2: 1/2 teams complete">
+    </div><div class="round-seg partial" title="Round 2: 1/2 teams complete · tap to see details" data-round-click="2">
       <div class="round-fill" style="width: 50%"></div>
       <div class="round-num">2</div>
-    </div><div class="round-seg" title="Round 3: 0/2 teams complete">
+    </div><div class="round-seg" title="Round 3: 0/2 teams complete · tap to see details" data-round-click="3">
       <div class="round-fill" style="width: 0%"></div>
       <div class="round-num">3</div>
-    </div><div class="round-seg" title="Round 4: 0/2 teams complete">
+    </div><div class="round-seg" title="Round 4: 0/2 teams complete · tap to see details" data-round-click="4">
       <div class="round-fill" style="width: 0%"></div>
       <div class="round-num">4</div>
-    </div><div class="round-seg" title="Round 5: 0/2 teams complete">
+    </div><div class="round-seg" title="Round 5: 0/2 teams complete · tap to see details" data-round-click="5">
       <div class="round-fill" style="width: 0%"></div>
       <div class="round-num">5</div>
-    </div><div class="round-seg" title="Round 6: 0/2 teams complete">
+    </div><div class="round-seg" title="Round 6: 0/2 teams complete · tap to see details" data-round-click="6">
       <div class="round-fill" style="width: 0%"></div>
       <div class="round-num">6</div>
-    </div><div class="round-seg" title="Round 7: 0/2 teams complete">
+    </div><div class="round-seg" title="Round 7: 0/2 teams complete · tap to see details" data-round-click="7">
       <div class="round-fill" style="width: 0%"></div>
       <div class="round-num">7</div>
-    </div><div class="round-seg" title="Round 8: 0/2 teams complete">
+    </div><div class="round-seg" title="Round 8: 0/2 teams complete · tap to see details" data-round-click="8">
       <div class="round-fill" style="width: 0%"></div>
       <div class="round-num">8</div>
-    </div><div class="round-seg" title="Round 9: 0/2 teams complete">
+    </div><div class="round-seg" title="Round 9: 0/2 teams complete · tap to see details" data-round-click="9">
       <div class="round-fill" style="width: 0%"></div>
       <div class="round-num">9</div>
     </div></div>
+  <div class="progress-hint">Tap any round to see who's completed it.</div>
 </section>
 
 
@@ -519,16 +459,12 @@ tr.rank-1 .rank-num { color: var(--gold); }
   <div class="section-label">Leaderboard</div>
   <div class="table-wrap"><table>
   <thead><tr>
-    <th>#</th>
-    <th>Team</th>
-    <th class="center">Played</th>
-    <th class="center">Pts</th>
-    <th class="center">Avg</th>
+    <th>#</th><th>Team</th>
+    <th class="center">Played</th><th class="center">Pts</th><th class="center">Avg</th>
     <th class="center">Projected</th>
-    <th class="center">Pace</th>
-    <th class="right">Payout</th>
+    <th class="center">Pace</th><th class="right">Payout</th>
   </tr></thead>
-  <tbody><tr class="rank-1">
+  <tbody><tr class="team-row rank-1" data-team-click="T2">
   <td><span class="rank-num">1</span></td>
   <td class="team-name"><span class="team-name-wrap"><span class="team-dot" style="background:#4A90E2"></span>Bryce / Kaitlyn</span></td>
   <td class="center">1/9</td>
@@ -537,7 +473,7 @@ tr.rank-1 .rank-num { color: var(--gold); }
   <td class="center projected">486</td>
   <td class="center"><span class="pace pace-on">ON PACE</span></td>
   <td class="right payout-zero">—</td>
-</tr><tr class="">
+</tr><tr class="team-row " data-team-click="T1">
   <td><span class="rank-num">2</span></td>
   <td class="team-name"><span class="team-name-wrap"><span class="team-dot" style="background:#2ECC71"></span>Cole / Sean</span></td>
   <td class="center">2/9</td>
@@ -554,100 +490,69 @@ tr.rank-1 .rank-num { color: var(--gold); }
   <div class="section-label">Skins</div>
   <div class="table-wrap"><table>
   <thead><tr>
-    <th>Round</th>
-    <th>Format</th>
-    <th class="center">Pot</th>
+    <th>Round</th><th>Format</th>
+    <th class="center">Pot<span class="th-sub">$10 × all players</span></th>
     <th>Winner</th>
-    <th class="right">Payout</th>
+    <th class="right">Payout<span class="th-sub">to winning team</span></th>
     <th class="right">Status</th>
   </tr></thead>
   <tbody><tr>
   <td><span class="rank-num">1</span></td>
   <td><span class="format-cell"><svg class="format-glyph"><use href="#glyph-scramble"/></svg><span class="format-label">Scramble</span></span></td>
-  <td class="center">$40</td>
-  <td><div class="skins-winner-block">
-          <div class="skins-winner-name"><span class="team-dot" style="background:#7A7A7A"></span>Bryce / Kaitlyn (54 pts)</div>
-          
-        </div></td>
-  <td class="right payout">$0</td>
-  <td class="right"><span class="skin-status skin-status-settled">Settled</span></td>
+  <td class="center">$40</td> <td><div class="skins-winner-block">
+          <div class="skins-winner-name"><span class="team-dot" style="background:#4A90E2"></span>Bryce / Kaitlyn (54 pts)</div>
+          <div class="skins-venmos">@bryce-venmo · @kaitlyn-venmo</div>
+        </div></td> <td class="right payout">$40</td> <td class="right"><span class="skin-status skin-status-settled">Settled</span></td>
 </tr><tr>
   <td><span class="rank-num">2</span></td>
   <td><span class="format-cell"><svg class="format-glyph"><use href="#glyph-shamble"/></svg><span class="format-label">Shamble</span></span></td>
-  <td class="center">$40</td>
-  <td><div class="skins-winner-block">
-          <div class="skins-winner-name"><span class="team-dot" style="background:#7A7A7A"></span>Cole / Sean (34 pts)</div>
-          
-        </div></td>
-  <td class="right payout">$0</td>
-  <td class="right"><span class="skin-status skin-status-settled">Settled</span></td>
+  <td class="center">$40</td> <td><div class="skins-winner-block">
+          <div class="skins-winner-name"><span class="team-dot" style="background:#2ECC71"></span>Cole / Sean (34 pts)</div>
+          <div class="skins-venmos">@cole-venmo · @sean-venmo</div>
+        </div><div class="skins-leader-note">Leader so far · 1 team still to play</div></td> <td class="right muted">—</td> <td class="right"><span class="skin-status skin-status-inplay">In Play</span></td>
 </tr><tr>
   <td><span class="rank-num">3</span></td>
   <td><span class="format-cell"><svg class="format-glyph"><use href="#glyph-bestball"/></svg><span class="format-label">Best Ball</span></span></td>
-  <td class="center muted">—</td>
-  <td class="muted">—</td>
-  <td class="right muted">—</td>
-  <td class="right"><span class="skin-status skin-status-pending">Pending</span></td>
+  <td class="center muted">—</td> <td class="muted">—</td> <td class="right muted">—</td> <td class="right"><span class="skin-status skin-status-pending">Pending</span></td>
 </tr><tr>
   <td><span class="rank-num">4</span></td>
   <td><span class="format-cell"><svg class="format-glyph"><use href="#glyph-scramble"/></svg><span class="format-label">Scramble</span></span></td>
-  <td class="center muted">—</td>
-  <td class="muted">—</td>
-  <td class="right muted">—</td>
-  <td class="right"><span class="skin-status skin-status-pending">Pending</span></td>
+  <td class="center muted">—</td> <td class="muted">—</td> <td class="right muted">—</td> <td class="right"><span class="skin-status skin-status-pending">Pending</span></td>
 </tr><tr>
   <td><span class="rank-num">5</span></td>
   <td><span class="format-cell"><svg class="format-glyph"><use href="#glyph-shamble"/></svg><span class="format-label">Shamble</span></span></td>
-  <td class="center muted">—</td>
-  <td class="muted">—</td>
-  <td class="right muted">—</td>
-  <td class="right"><span class="skin-status skin-status-pending">Pending</span></td>
+  <td class="center muted">—</td> <td class="muted">—</td> <td class="right muted">—</td> <td class="right"><span class="skin-status skin-status-pending">Pending</span></td>
 </tr><tr>
   <td><span class="rank-num">6</span></td>
   <td><span class="format-cell"><svg class="format-glyph"><use href="#glyph-bestball"/></svg><span class="format-label">Best Ball</span></span></td>
-  <td class="center muted">—</td>
-  <td class="muted">—</td>
-  <td class="right muted">—</td>
-  <td class="right"><span class="skin-status skin-status-pending">Pending</span></td>
+  <td class="center muted">—</td> <td class="muted">—</td> <td class="right muted">—</td> <td class="right"><span class="skin-status skin-status-pending">Pending</span></td>
 </tr><tr>
   <td><span class="rank-num">7</span></td>
   <td><span class="format-cell"><svg class="format-glyph"><use href="#glyph-scramble"/></svg><span class="format-label">Scramble</span></span></td>
-  <td class="center muted">—</td>
-  <td class="muted">—</td>
-  <td class="right muted">—</td>
-  <td class="right"><span class="skin-status skin-status-pending">Pending</span></td>
+  <td class="center muted">—</td> <td class="muted">—</td> <td class="right muted">—</td> <td class="right"><span class="skin-status skin-status-pending">Pending</span></td>
 </tr><tr>
   <td><span class="rank-num">8</span></td>
   <td><span class="format-cell"><svg class="format-glyph"><use href="#glyph-shamble"/></svg><span class="format-label">Shamble</span></span></td>
-  <td class="center muted">—</td>
-  <td class="muted">—</td>
-  <td class="right muted">—</td>
-  <td class="right"><span class="skin-status skin-status-pending">Pending</span></td>
+  <td class="center muted">—</td> <td class="muted">—</td> <td class="right muted">—</td> <td class="right"><span class="skin-status skin-status-pending">Pending</span></td>
 </tr><tr>
   <td><span class="rank-num">9</span></td>
   <td><span class="format-cell"><svg class="format-glyph"><use href="#glyph-bestball"/></svg><span class="format-label">Best Ball</span></span></td>
-  <td class="center muted">—</td>
-  <td class="muted">—</td>
-  <td class="right muted">—</td>
-  <td class="right"><span class="skin-status skin-status-pending">Pending</span></td>
+  <td class="center muted">—</td> <td class="muted">—</td> <td class="right muted">—</td> <td class="right"><span class="skin-status skin-status-pending">Pending</span></td>
 </tr></tbody>
   </table></div>
 </section>
-<section>
-  <div class="reels-grid">
-    <div class="reel-column lucky">
-  <div class="reel-column-label">Lucky Reel</div>
-  <div class="reel-empty">No Lucky events yet. Make some birdies.</div>
+<section><div class="reels-grid"><div class="reel-column lucky"><div class="reel-column-label">Lucky Reel</div><div class="reel-empty">No Lucky events yet. Make some birdies.</div></div><div class="reel-column unlucky"><div class="reel-column-label">Unlucky Reel</div><div class="reel-empty">No Unlucky events yet. Give it time.</div></div></div></section>
+<footer class="dashboard-footer">3 rounds played · Last updated May 27, 2026 · 1:06 PM</footer>
 </div>
-    <div class="reel-column unlucky">
-  <div class="reel-column-label">Unlucky Reel</div>
-  <div class="reel-empty">No Unlucky events yet. Give it time.</div>
-</div>
+
+<div id="modal-overlay" class="modal-overlay" aria-hidden="true">
+  <div class="modal-card" role="dialog">
+    <button class="modal-close" aria-label="Close" onclick="LC.closeModal()">×</button>
+    <div id="modal-body"></div>
   </div>
-</section>
-<footer class="dashboard-footer">
-  3 rounds played · Last updated May 27, 2026 · 12:24 PM
-</footer>
+</div>
+<div id="lightbox-overlay" class="lightbox-overlay" aria-hidden="true">
+  <img id="lightbox-img" alt="Photo" />
 </div>
 <script>
 (function() {
@@ -656,41 +561,448 @@ tr.rank-1 .rank-num { color: var(--gold); }
     var cards = carousel.querySelectorAll('.reel-card');
     var dots  = carousel.querySelectorAll('.reel-dot');
     if (cards.length <= 1) return;
-
-    var idx = 0;
-    var INTERVAL_MS = 7000;
-    var timer = null;
-
+    var idx = 0, INTERVAL_MS = 7000, timer = null;
     function goTo(i) {
       idx = (i + cards.length) % cards.length;
       track.style.transform = 'translateX(-' + (idx * 100) + '%)';
       for (var d = 0; d < dots.length; d++) {
-        if (d === idx) dots[d].classList.add('active');
-        else dots[d].classList.remove('active');
+        if (d === idx) dots[d].classList.add('active'); else dots[d].classList.remove('active');
       }
     }
     function start() { stop(); timer = setInterval(function() { goTo(idx + 1); }, INTERVAL_MS); }
     function stop()  { if (timer) { clearInterval(timer); timer = null; } }
     for (var i = 0; i < dots.length; i++) {
-      (function(n) {
-        dots[n].addEventListener('click', function() { goTo(n); start(); });
-      })(i);
+      (function(n) { dots[n].addEventListener('click', function() { goTo(n); start(); }); })(i);
     }
     carousel.addEventListener('mouseenter', stop);
     carousel.addEventListener('mouseleave', start);
     start();
   }
-
   function init() {
     var carousels = document.querySelectorAll('.reel-carousel');
     for (var i = 0; i < carousels.length; i++) initCarousel(carousels[i]);
   }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
+</script>
+<script>window.LUCKY_DATA = {"roundsDetail":{"T1_1":{"teamId":"T1","teamName":"Cole / Sean","teamColor":"#2ECC71","roundNum":1,"format":"Scramble","status":"completed","teeOff":{"timestamp":"2026-05-27T17:16:04.517Z","photoUrl":"https://drive.google.com/file/d/1LvSwWzwczoT7KizAbHshlcLVpx-3hZs2/view?usp=drivesdk","notes":""},"scorecard":{"timestamp":"2026-05-27T17:17:44.718Z","photoUrl":"","notes":"https://drive.google.com/file/d/1O54PvTZfBjFJyXXYvv7tbiM6I4G1RXmg/view?usp=drivesdk"},"netHoles":[2,4,6,4,4,4,5,3,4,4,4,3,4,5,4,3,4,5],"totalPts":36,"datePlayed":"2026-05-27T17:17:44.718Z","gap":"1m"},"T1_2":{"teamId":"T1","teamName":"Cole / Sean","teamColor":"#2ECC71","roundNum":2,"format":"Shamble","status":"completed","teeOff":{"timestamp":"2026-05-27T17:18:16.347Z","photoUrl":"https://drive.google.com/file/d/1cDNjTeRM6lELpm4eJBU2gTz3IyYdRg5D/view?usp=drivesdk","notes":""},"scorecard":{"timestamp":"2026-05-27T17:19:50.045Z","photoUrl":"","notes":"https://drive.google.com/file/d/1MVc0Y9l4N6PDSng8IUDWvTP5HxQDnNAn/view?usp=drivesdk"},"netHoles":[4,3,5,3,6,4,6,3,4,4,4,3,4,5,4,3,4,5],"totalPts":34,"datePlayed":"2026-05-27T17:19:50.045Z","gap":"1m"},"T2_1":{"teamId":"T2","teamName":"Bryce / Kaitlyn","teamColor":"#4A90E2","roundNum":1,"format":"Scramble","status":"completed","teeOff":{"timestamp":"2026-05-27T17:23:23.294Z","photoUrl":"https://drive.google.com/file/d/1Qw1JmwIA0o-35MoCeu5a0l73yhtyYT45/view?usp=drivesdk","notes":""},"scorecard":{"timestamp":"2026-05-27T17:24:14.854Z","photoUrl":"","notes":"https://drive.google.com/file/d/1OedLX4bsY2hv2fDEe-aHa40bthN_Xjsk/view?usp=drivesdk"},"netHoles":[3,2,4,3,3,3,4,2,3,3,3,2,3,4,3,2,3,4],"totalPts":54,"datePlayed":"2026-05-27T17:24:14.854Z","gap":"0m"}},"teamRounds":{"T1":[{"roundNum":1,"format":"Scramble","status":"completed","totalPts":36,"hasData":true},{"roundNum":2,"format":"Shamble","status":"completed","totalPts":34,"hasData":true},{"roundNum":3,"format":"Best Ball","status":"pending","totalPts":null,"hasData":false},{"roundNum":4,"format":"Scramble","status":"pending","totalPts":null,"hasData":false},{"roundNum":5,"format":"Shamble","status":"pending","totalPts":null,"hasData":false},{"roundNum":6,"format":"Best Ball","status":"pending","totalPts":null,"hasData":false},{"roundNum":7,"format":"Scramble","status":"pending","totalPts":null,"hasData":false},{"roundNum":8,"format":"Shamble","status":"pending","totalPts":null,"hasData":false},{"roundNum":9,"format":"Best Ball","status":"pending","totalPts":null,"hasData":false}],"T2":[{"roundNum":1,"format":"Scramble","status":"completed","totalPts":54,"hasData":true},{"roundNum":2,"format":"Shamble","status":"pending","totalPts":null,"hasData":false},{"roundNum":3,"format":"Best Ball","status":"pending","totalPts":null,"hasData":false},{"roundNum":4,"format":"Scramble","status":"pending","totalPts":null,"hasData":false},{"roundNum":5,"format":"Shamble","status":"pending","totalPts":null,"hasData":false},{"roundNum":6,"format":"Best Ball","status":"pending","totalPts":null,"hasData":false},{"roundNum":7,"format":"Scramble","status":"pending","totalPts":null,"hasData":false},{"roundNum":8,"format":"Shamble","status":"pending","totalPts":null,"hasData":false},{"roundNum":9,"format":"Best Ball","status":"pending","totalPts":null,"hasData":false}]},"teams":[{"id":"T1","name":"Cole / Sean","color":"#2ECC71","player1":"Cole","player2":"Sean"},{"id":"T2","name":"Bryce / Kaitlyn","color":"#4A90E2","player1":"Bryce","player2":"Kaitlyn"}],"standings":[{"teamId":"T2","teamName":"Bryce / Kaitlyn","color":"#4A90E2","roundsPlayed":1,"totalPts":54,"projected":486,"rank":1,"pace":"ON PACE","payout":0},{"teamId":"T1","teamName":"Cole / Sean","color":"#2ECC71","roundsPlayed":2,"totalPts":70,"projected":315,"rank":2,"pace":"ON PACE","payout":0}],"skinsByRound":{"1":{"roundNum":1,"format":"Scramble","pot":40,"payout":40,"winners":[{"teamId":"T2","name":"Bryce / Kaitlyn","color":"#4A90E2","pts":54,"venmos":["@bryce-venmo","@kaitlyn-venmo"]}],"status":"SETTLED","teamsCompleted":2,"totalTeams":2},"2":{"roundNum":2,"format":"Shamble","pot":40,"payout":40,"winners":[{"teamId":"T1","name":"Cole / Sean","color":"#2ECC71","pts":34,"venmos":["@cole-venmo","@sean-venmo"]}],"status":"IN_PLAY","teamsCompleted":1,"totalTeams":2},"3":{"roundNum":3,"format":"Best Ball","pot":0,"payout":0,"winners":[],"status":"PENDING","teamsCompleted":0,"totalTeams":2},"4":{"roundNum":4,"format":"Scramble","pot":0,"payout":0,"winners":[],"status":"PENDING","teamsCompleted":0,"totalTeams":2},"5":{"roundNum":5,"format":"Shamble","pot":0,"payout":0,"winners":[],"status":"PENDING","teamsCompleted":0,"totalTeams":2},"6":{"roundNum":6,"format":"Best Ball","pot":0,"payout":0,"winners":[],"status":"PENDING","teamsCompleted":0,"totalTeams":2},"7":{"roundNum":7,"format":"Scramble","pot":0,"payout":0,"winners":[],"status":"PENDING","teamsCompleted":0,"totalTeams":2},"8":{"roundNum":8,"format":"Shamble","pot":0,"payout":0,"winners":[],"status":"PENDING","teamsCompleted":0,"totalTeams":2},"9":{"roundNum":9,"format":"Best Ball","pot":0,"payout":0,"winners":[],"status":"PENDING","teamsCompleted":0,"totalTeams":2}},"roundCompletion":{"1":{"teamsCompleted":2,"totalTeams":2,"pct":100,"isComplete":true},"2":{"teamsCompleted":1,"totalTeams":2,"pct":50,"isComplete":false},"3":{"teamsCompleted":0,"totalTeams":2,"pct":0,"isComplete":false},"4":{"teamsCompleted":0,"totalTeams":2,"pct":0,"isComplete":false},"5":{"teamsCompleted":0,"totalTeams":2,"pct":0,"isComplete":false},"6":{"teamsCompleted":0,"totalTeams":2,"pct":0,"isComplete":false},"7":{"teamsCompleted":0,"totalTeams":2,"pct":0,"isComplete":false},"8":{"teamsCompleted":0,"totalTeams":2,"pct":0,"isComplete":false},"9":{"teamsCompleted":0,"totalTeams":2,"pct":0,"isComplete":false}}};</script>
+<script>
+(function() {
+  var D = window.LUCKY_DATA || {};
+  var stack = [];
+  var COURSE_PARS = [4,3,5,4,4,4,5,3,4,4,4,3,4,5,4,3,4,5];
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
+  function escapeHtml(s) {
+    if (s == null) return '';
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
   }
+
+  function fmtDateTime(iso) {
+    if (!iso) return '';
+    try {
+      var d = new Date(iso);
+      return d.toLocaleString('en-US', { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+    } catch (e) { return String(iso); }
+  }
+
+  function fmtDate(iso) {
+    if (!iso) return '';
+    try {
+      var d = new Date(iso);
+      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    } catch (e) { return String(iso); }
+  }
+
+  function extractDriveId(url) {
+    if (!url) return null;
+    var m1 = String(url).match(/\/d\/([^/]+)/);
+    if (m1) return m1[1];
+    var m2 = String(url).match(/[?&]id=([^&]+)/);
+    if (m2) return m2[1];
+    return null;
+  }
+
+  function driveThumb(url, width) {
+    var id = extractDriveId(url);
+    if (!id) return url;
+    return 'https://drive.google.com/thumbnail?id=' + id + '&sz=w' + (width || 1000);
+  }
+
+  function stablefordPts(score, par) {
+    if (!score) return 0;
+    var diff = score - par;
+    if (diff <= -2) return 4;
+    if (diff === -1) return 3;
+    if (diff === 0) return 2;
+    if (diff === 1) return 1;
+    return 0;
+  }
+
+  // ===== Open/close core =====
+
+  function openModal() {
+    var overlay = document.getElementById('modal-overlay');
+    overlay.classList.add('active');
+    overlay.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    var overlay = document.getElementById('modal-overlay');
+    overlay.classList.remove('active');
+    overlay.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    stack = [];
+  }
+
+  function pushView(view) {
+    stack.push(view);
+    renderCurrent();
+    openModal();
+  }
+
+  function back() {
+    stack.pop();
+    if (stack.length === 0) { closeModal(); return; }
+    renderCurrent();
+  }
+
+  function renderCurrent() {
+    if (stack.length === 0) return;
+    var view = stack[stack.length - 1];
+    if (view.type === 'team') renderTeamDetail(view.teamId);
+    else if (view.type === 'round-status') renderRoundStatus(view.roundNum);
+    else if (view.type === 'round-detail') renderRoundDetail(view.teamId, view.roundNum);
+  }
+
+  // ===== Public API =====
+
+  function showTeam(teamId) {
+    stack = [];
+    pushView({ type: 'team', teamId: teamId });
+  }
+
+  function showRoundStatus(roundNum) {
+    stack = [];
+    pushView({ type: 'round-status', roundNum: roundNum });
+  }
+
+  function showRoundDetail(teamId, roundNum) {
+    pushView({ type: 'round-detail', teamId: teamId, roundNum: roundNum });
+  }
+
+  // Direct from in-progress card click (no parent context)
+  function showRoundDetailDirect(teamId, roundNum) {
+    stack = [];
+    pushView({ type: 'round-detail', teamId: teamId, roundNum: roundNum });
+  }
+
+  function openLightbox(url) {
+    var img = document.getElementById('lightbox-img');
+    var overlay = document.getElementById('lightbox-overlay');
+    img.src = driveThumb(url, 1600);
+    overlay.classList.add('active');
+    overlay.setAttribute('aria-hidden', 'false');
+  }
+
+  function closeLightbox() {
+    var overlay = document.getElementById('lightbox-overlay');
+    overlay.classList.remove('active');
+    overlay.setAttribute('aria-hidden', 'true');
+    document.getElementById('lightbox-img').src = '';
+  }
+
+  // ===== Renderers =====
+
+  function backButtonHtml() {
+    if (stack.length <= 1) return '';
+    var prev = stack[stack.length - 2];
+    var label = 'Back';
+    if (prev.type === 'team') {
+      var team = (D.teams || []).find(function(t) { return t.id === prev.teamId; });
+      label = team ? 'Back to ' + team.name : 'Back to team';
+    } else if (prev.type === 'round-status') {
+      label = 'Back to Round ' + prev.roundNum;
+    }
+    return '<button class="modal-back" onclick="LC.back()">← ' + escapeHtml(label) + '</button>';
+  }
+
+  function renderTeamDetail(teamId) {
+    var team = (D.teams || []).find(function(t) { return t.id === teamId; });
+    if (!team) { document.getElementById('modal-body').innerHTML = '<p>Team not found.</p>'; return; }
+
+    var standing = (D.standings || []).find(function(s) { return s.teamId === teamId; }) || { rank: '—', roundsPlayed: 0, totalPts: 0, projected: 0 };
+    var rounds = (D.teamRounds || {})[teamId] || [];
+    var players = [team.player1, team.player2].filter(Boolean).join(' · ');
+
+    var roundsHtml = rounds.map(function(rd) {
+      var hasData = rd.hasData;
+      var click = hasData ? 'onclick="LC.showRoundDetail(\'' + teamId + '\', ' + rd.roundNum + ')"' : '';
+      var statusLabel = rd.status === 'completed' ? 'Completed' : (rd.status === 'in-progress' ? 'In progress' : 'Pending');
+      var ptsLabel = rd.totalPts != null ? rd.totalPts + ' pts' : '—';
+      return '<button class="round-item ' + (hasData ? '' : 'pending') + '" ' + click + ' ' + (hasData ? '' : 'disabled') + '>' +
+        '<div class="round-item-num">' + rd.roundNum + '</div>' +
+        '<div>' +
+          '<div class="round-item-format">' + escapeHtml(rd.format) + '</div>' +
+          '<div class="round-item-status">' + statusLabel + '</div>' +
+        '</div>' +
+        '<div class="round-item-pts">' + ptsLabel + '</div>' +
+      '</button>';
+    }).join('');
+
+    var html = backButtonHtml() +
+      '<div class="modal-pre-label">Team</div>' +
+      '<h2 class="modal-title"><span class="team-dot" style="background:' + team.color + '"></span>' + escapeHtml(team.name) + '</h2>' +
+      (players ? '<div class="modal-subtitle">' + escapeHtml(players) + '</div>' : '') +
+      '<div class="modal-stats-row">' +
+        '<div class="modal-stat"><div class="modal-stat-label">Rank</div><div class="modal-stat-value">' + standing.rank + '</div></div>' +
+        '<div class="modal-stat"><div class="modal-stat-label">Played</div><div class="modal-stat-value">' + standing.roundsPlayed + '/9</div></div>' +
+        '<div class="modal-stat"><div class="modal-stat-label">Total Pts</div><div class="modal-stat-value">' + standing.totalPts + '</div></div>' +
+        '<div class="modal-stat"><div class="modal-stat-label">Projected</div><div class="modal-stat-value">' + (standing.roundsPlayed > 0 ? standing.projected : '—') + '</div></div>' +
+      '</div>' +
+      '<div class="modal-section">' +
+        '<div class="modal-section-label">Rounds</div>' +
+        '<div class="rounds-list">' + roundsHtml + '</div>' +
+      '</div>';
+
+    document.getElementById('modal-body').innerHTML = html;
+  }
+
+  function renderRoundStatus(roundNum) {
+    var teams = D.teams || [];
+    var roundsDetail = D.roundsDetail || {};
+    var skin = (D.skinsByRound || {})[roundNum];
+    var completion = (D.roundCompletion || {})[roundNum] || { teamsCompleted: 0, totalTeams: teams.length };
+    var format = teams.length > 0 && roundsDetail[teams[0].id + '_' + roundNum]
+      ? roundsDetail[teams[0].id + '_' + roundNum].format
+      : '';
+
+    var teamHtml = teams.map(function(team) {
+      var detail = roundsDetail[team.id + '_' + roundNum];
+      var stateClass = 'pending', stateLabel = 'Not started', ptsLabel = '', click = '', clickClass = '';
+      if (detail) {
+        if (detail.status === 'completed') {
+          stateClass = 'completed'; stateLabel = 'Completed';
+          ptsLabel = '<span class="team-status-pts">' + (detail.totalPts != null ? detail.totalPts + ' pts' : '') + '</span>';
+          click = 'onclick="LC.showRoundDetail(\'' + team.id + '\', ' + roundNum + ')"';
+          clickClass = 'clickable';
+        } else if (detail.status === 'in-progress') {
+          stateClass = 'in-progress'; stateLabel = 'In progress';
+          click = 'onclick="LC.showRoundDetail(\'' + team.id + '\', ' + roundNum + ')"';
+          clickClass = 'clickable';
+        }
+      }
+      return '<button class="team-status-item ' + clickClass + '" ' + click + ' ' + (clickClass ? '' : 'disabled') + '>' +
+        '<span class="team-dot" style="background:' + team.color + '"></span>' +
+        '<span class="team-status-name">' + escapeHtml(team.name) + '</span>' +
+        (ptsLabel || '<span></span>') +
+        '<span class="team-status-state ' + stateClass + '">' + stateLabel + '</span>' +
+      '</button>';
+    }).join('');
+
+    var skinsHtml = '';
+    if (skin && skin.winners && skin.winners.length > 0 && skin.status !== 'PENDING') {
+      var winnersStr = skin.winners.map(function(w) {
+        return escapeHtml(w.name) + (w.pts != null ? ' (' + w.pts + ' pts)' : '');
+      }).join(' · ');
+      var payoutStr = skin.status === 'SETTLED' ? '$' + skin.payout + ' payout' : 'Leader so far';
+      skinsHtml =
+        '<div class="modal-section">' +
+          '<div class="modal-section-label">Skins</div>' +
+          '<div class="modal-skins-summary"><strong>' + winnersStr + '</strong> · ' + payoutStr + '</div>' +
+        '</div>';
+    }
+
+    var html = backButtonHtml() +
+      '<div class="modal-pre-label">Round ' + roundNum + (format ? ' · ' + escapeHtml(format) : '') + '</div>' +
+      '<h2 class="modal-title">Round Status</h2>' +
+      '<div class="modal-subtitle">' + completion.teamsCompleted + ' of ' + completion.totalTeams + ' teams completed</div>' +
+      '<div class="modal-section">' +
+        '<div class="modal-section-label">Teams</div>' +
+        '<div class="team-status-list">' + teamHtml + '</div>' +
+      '</div>' +
+      skinsHtml;
+
+    document.getElementById('modal-body').innerHTML = html;
+  }
+
+  function renderRoundDetail(teamId, roundNum) {
+    var key = teamId + '_' + roundNum;
+    var detail = (D.roundsDetail || {})[key];
+    if (!detail) {
+      document.getElementById('modal-body').innerHTML = backButtonHtml() + '<p>No data for this round.</p>';
+      return;
+    }
+
+    // Timeline (tee-off → scorecard, with notes interleaved)
+    var timelineHtml = '<div class="timeline">';
+    if (detail.teeOff) {
+      timelineHtml +=
+        '<div class="timeline-row">' +
+          '<div class="timeline-bullet"></div>' +
+          '<div class="timeline-content">' +
+            '<div class="timeline-head">' +
+              '<span class="timeline-event">Tee-off submitted</span>' +
+              '<span class="timeline-time">' + fmtDateTime(detail.teeOff.timestamp) + '</span>' +
+            '</div>' +
+            (detail.teeOff.notes ? '<div class="timeline-note">"' + escapeHtml(detail.teeOff.notes) + '"</div>' : '') +
+          '</div>' +
+        '</div>';
+    }
+    if (detail.teeOff && detail.scorecard && detail.gap) {
+      timelineHtml += '<div class="timeline-gap">↓ ' + detail.gap + ' later</div>';
+    }
+    if (detail.scorecard) {
+      timelineHtml +=
+        '<div class="timeline-row">' +
+          '<div class="timeline-bullet green"></div>' +
+          '<div class="timeline-content">' +
+            '<div class="timeline-head">' +
+              '<span class="timeline-event">Scorecard submitted</span>' +
+              '<span class="timeline-time">' + fmtDateTime(detail.scorecard.timestamp) + '</span>' +
+            '</div>' +
+            (detail.scorecard.notes ? '<div class="timeline-note">"' + escapeHtml(detail.scorecard.notes) + '"</div>' : '') +
+          '</div>' +
+        '</div>';
+    }
+    timelineHtml += '</div>';
+
+    // Scorecard (only if completed)
+    var scorecardHtml = '';
+    if (detail.netHoles && detail.netHoles.length === 18) {
+      scorecardHtml = '<div class="modal-section">' +
+        '<div class="modal-section-label">Scorecard</div>' +
+        '<div class="modal-scorecard">' +
+          buildNineHtml(detail.netHoles, 0) +
+          buildNineHtml(detail.netHoles, 9) +
+        '</div></div>';
+    }
+
+    // Photos
+    var photosHtml = '';
+    if (detail.teeOff || detail.scorecard) {
+      photosHtml = '<div class="modal-section">' +
+        '<div class="modal-section-label">Photos</div>' +
+        '<div class="photo-thumbs-grid">' +
+          photoThumbHtml(detail.teeOff ? detail.teeOff.photoUrl : null, 'Tee-off') +
+          photoThumbHtml(detail.scorecard ? detail.scorecard.photoUrl : null, 'Scorecard') +
+        '</div></div>';
+    }
+
+    var statusLabel = detail.status === 'completed' ? 'Completed' : 'In progress';
+    var ptsHtml = detail.totalPts != null
+      ? '<div class="modal-subtitle"><strong style="color:var(--gold);font-weight:800;">' + detail.totalPts + ' pts</strong> · ' + statusLabel + '</div>'
+      : '<div class="modal-subtitle">' + statusLabel + '</div>';
+
+    var html = backButtonHtml() +
+      '<div class="modal-pre-label">Round ' + roundNum + ' · ' + escapeHtml(detail.format) + (detail.datePlayed ? ' · ' + fmtDate(detail.datePlayed) : '') + '</div>' +
+      '<h2 class="modal-title"><span class="team-dot" style="background:' + detail.teamColor + '"></span>' + escapeHtml(detail.teamName) + '</h2>' +
+      ptsHtml +
+      '<div class="modal-section">' +
+        '<div class="modal-section-label">Timeline</div>' +
+        timelineHtml +
+      '</div>' +
+      scorecardHtml +
+      photosHtml;
+
+    document.getElementById('modal-body').innerHTML = html;
+  }
+
+  function buildNineHtml(holes, startIdx) {
+    var html = '<div class="modal-sc-9">';
+    html += '<div class="sc-header sc-label">Hole</div>';
+    for (var i = startIdx; i < startIdx + 9; i++) html += '<div class="sc-header">' + (i + 1) + '</div>';
+    html += '<div class="sc-header sc-label">Tot</div>';
+
+    html += '<div class="sc-label">Par</div>';
+    var parTot = 0;
+    for (var j = startIdx; j < startIdx + 9; j++) { html += '<div>' + COURSE_PARS[j] + '</div>'; parTot += COURSE_PARS[j]; }
+    html += '<div class="sc-tot">' + parTot + '</div>';
+
+    html += '<div class="sc-label">Score</div>';
+    var scoreTot = 0;
+    for (var k = startIdx; k < startIdx + 9; k++) {
+      var s = holes[k] || 0;
+      var diff = s - COURSE_PARS[k];
+      var cls = diff < 0 ? 'sc-score-under' : (diff > 0 ? 'sc-score-over' : '');
+      html += '<div class="' + cls + '">' + (s || '—') + '</div>';
+      scoreTot += s;
+    }
+    html += '<div class="sc-tot">' + scoreTot + '</div>';
+
+    html += '<div class="sc-label">Pts</div>';
+    var ptsTot = 0;
+    for (var p = startIdx; p < startIdx + 9; p++) {
+      var pts = stablefordPts(holes[p], COURSE_PARS[p]);
+      var ptsCls = pts >= 3 ? 'sc-pts-good' : '';
+      html += '<div class="' + ptsCls + '">' + pts + '</div>';
+      ptsTot += pts;
+    }
+    html += '<div class="sc-tot">' + ptsTot + '</div>';
+    html += '</div>';
+    return html;
+  }
+
+  function photoThumbHtml(url, caption) {
+    if (!url) {
+      return '<div class="photo-thumb-missing">No ' + caption.toLowerCase() + ' photo</div>';
+    }
+    var thumbUrl = driveThumb(url, 1000);
+    return '<div class="photo-thumb" onclick="LC.openLightbox(\'' + url.replace(/'/g, "\\'") + '\')">' +
+      '<img src="' + thumbUrl + '" alt="' + caption + ' photo" loading="lazy" />' +
+      '<div class="photo-thumb-caption">' + caption + '</div>' +
+    '</div>';
+  }
+
+  // ===== Wire up =====
+
+  function init() {
+    // Click handlers via data attributes
+    document.querySelectorAll('[data-team-click]').forEach(function(el) {
+      el.addEventListener('click', function(e) {
+        // In-progress card has both team-click and round-detail — prefer round-detail
+        var rd = el.getAttribute('data-round-detail');
+        if (rd) {
+          var parts = rd.split('_');
+          showRoundDetailDirect(parts[0], parseInt(parts[1]));
+        } else {
+          showTeam(el.getAttribute('data-team-click'));
+        }
+      });
+    });
+    document.querySelectorAll('[data-round-click]').forEach(function(el) {
+      el.addEventListener('click', function() {
+        showRoundStatus(parseInt(el.getAttribute('data-round-click')));
+      });
+    });
+
+    // Backdrop click closes modal
+    document.getElementById('modal-overlay').addEventListener('click', function(e) {
+      if (e.target.id === 'modal-overlay') closeModal();
+    });
+    // Lightbox click closes lightbox
+    document.getElementById('lightbox-overlay').addEventListener('click', closeLightbox);
+
+    // ESC closes
+    document.addEventListener('keydown', function(e) {
+      if (e.key !== 'Escape') return;
+      if (document.getElementById('lightbox-overlay').classList.contains('active')) closeLightbox();
+      else if (document.getElementById('modal-overlay').classList.contains('active')) closeModal();
+    });
+  }
+
+  // Expose
+  window.LC = {
+    showTeam: showTeam,
+    showRoundStatus: showRoundStatus,
+    showRoundDetail: showRoundDetail,
+    closeModal: closeModal,
+    back: back,
+    openLightbox: openLightbox,
+    closeLightbox: closeLightbox
+  };
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
 </script>
 </body>
