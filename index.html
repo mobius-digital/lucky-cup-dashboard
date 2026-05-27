@@ -11,12 +11,13 @@
   --surface-warm: #F5F2EB;
   --text: #1A1A1A;
   --text-2: #5A5A5A;
-  --text-3: #6B6B6B;       /* darkened from #9A9A9A for better readability */
-  --text-faint: #A8A8A8;   /* used only for em-dash placeholders */
+  --text-3: #6B6B6B;
+  --text-faint: #A8A8A8;
   --gold: #B8860B;
   --gold-soft: #C9B273;
   --gold-tint: rgba(184, 134, 11, 0.08);
   --gold-tint-strong: rgba(184, 134, 11, 0.18);
+  --gold-glow: rgba(184, 134, 11, 0.22);
   --green: #2ECC71;
   --green-deep: #248F4F;
   --green-tint: rgba(46, 204, 113, 0.07);
@@ -26,6 +27,7 @@
   --border-2: #F0EFE8;
   --shadow: 0 1px 2px rgba(20,20,20,0.03), 0 6px 20px rgba(20,20,20,0.04);
   --shadow-lift: 0 2px 4px rgba(20,20,20,0.04), 0 12px 32px rgba(20,20,20,0.06);
+  --shadow-trophy: 0 4px 8px rgba(184,134,11,0.06), 0 20px 60px rgba(184,134,11,0.1);
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
@@ -71,6 +73,100 @@ body {
 .status-pill.awaiting    { background: var(--surface-warm); color: var(--text-3); }
 .status-pill.final       { background: var(--text); color: var(--bg); }
 
+/* CHAMPION CARD */
+.champion-section { margin-bottom: 32px; }
+.champion-card {
+  background: linear-gradient(180deg, var(--surface) 0%, var(--gold-tint) 100%);
+  border: 1px solid var(--gold);
+  border-radius: 18px;
+  padding: 64px 40px 56px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-trophy);
+}
+.champion-card::before {
+  content: ""; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 120px; height: 4px; background: var(--gold);
+  border-radius: 0 0 4px 4px;
+}
+.champion-pre-label {
+  font-size: 11px; letter-spacing: 3.5px; text-transform: uppercase;
+  font-weight: 700; color: var(--gold); margin-bottom: 22px;
+}
+.champion-team {
+  font-size: 72px; font-weight: 900; letter-spacing: -0.025em;
+  line-height: 1; color: var(--text); margin-bottom: 14px;
+  display: inline-flex; align-items: center; gap: 18px;
+}
+.champion-team .team-dot { width: 18px; height: 18px; }
+.champion-players {
+  font-size: 17px; color: var(--text-2); margin-bottom: 32px;
+  letter-spacing: 0.3px;
+}
+.champion-payout {
+  font-size: 56px; font-weight: 800; color: var(--gold);
+  letter-spacing: -0.02em; line-height: 1; margin-bottom: 14px;
+}
+.champion-stats {
+  font-size: 12px; color: var(--text-3); letter-spacing: 2px;
+  text-transform: uppercase; font-weight: 600;
+}
+
+/* RUNNERS-UP */
+.runners-up-section { margin-bottom: 56px; }
+.runners-up {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+.runner-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+  padding: 26px 28px; box-shadow: var(--shadow); position: relative;
+}
+.runner-rank-label {
+  font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase;
+  font-weight: 700; color: var(--text-3); margin-bottom: 12px;
+}
+.runner-team-name {
+  font-size: 24px; font-weight: 800; margin-bottom: 8px;
+  display: flex; align-items: center; letter-spacing: -0.01em;
+}
+.runner-pts {
+  font-size: 13px; color: var(--text-3); margin-bottom: 18px;
+  letter-spacing: 0.3px;
+}
+.runner-payout {
+  font-size: 28px; font-weight: 700; color: var(--gold);
+  letter-spacing: -0.01em;
+}
+
+/* SUPERLATIVES */
+.superlatives-section { margin-bottom: 56px; }
+.superlatives {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+.superlative-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+  padding: 20px 22px; box-shadow: var(--shadow);
+}
+.superlative-label {
+  font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--text-3); font-weight: 700; margin-bottom: 10px;
+}
+.superlative-team {
+  font-size: 15px; font-weight: 700;
+  display: flex; align-items: center; margin-bottom: 8px;
+}
+.superlative-value {
+  font-size: 24px; font-weight: 800; color: var(--gold);
+  letter-spacing: -0.02em; line-height: 1;
+}
+.superlative-sub {
+  font-size: 11px; color: var(--text-3);
+  letter-spacing: 0.3px; margin-top: 4px;
+}
+
 /* MONEY STRIP */
 .money-strip {
   display: grid; grid-template-columns: 1fr 1fr 1fr;
@@ -88,15 +184,11 @@ body {
   letter-spacing: -0.02em; line-height: 1;
 }
 .money-value.gold { color: var(--gold); }
-.money-sub {
-  font-size: 12px; color: var(--text-3); margin-top: 6px;
-}
+.money-sub { font-size: 12px; color: var(--text-3); margin-top: 6px; }
 
 /* SEASON PROGRESS */
 .season-progress { margin-bottom: 56px; }
-.progress-bar {
-  display: grid; grid-template-columns: repeat(9, 1fr); gap: 6px;
-}
+.progress-bar { display: grid; grid-template-columns: repeat(9, 1fr); gap: 6px; }
 .round-seg {
   position: relative; height: 44px;
   background: var(--surface); border: 1px solid var(--border);
@@ -111,8 +203,7 @@ body {
 .round-num {
   position: absolute; top: 50%; left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 13px; font-weight: 700; color: var(--text-2);
-  z-index: 2;
+  font-size: 13px; font-weight: 700; color: var(--text-2); z-index: 2;
 }
 .round-seg.complete { border-color: var(--gold); }
 .round-seg.complete .round-num { color: var(--gold); }
@@ -125,19 +216,15 @@ section { margin-bottom: 56px; }
   text-transform: uppercase; font-weight: 700; margin-bottom: 22px;
   display: flex; align-items: center; gap: 14px;
 }
-.section-label::after {
-  content: ""; flex: 1; height: 1px; background: var(--border);
-}
+.section-label::after { content: ""; flex: 1; height: 1px; background: var(--border); }
 
-/* TEAM IDENTITY DOT */
+/* TEAM DOT */
 .team-dot {
   display: inline-block; width: 10px; height: 10px;
   border-radius: 50%; margin-right: 10px;
   vertical-align: middle; flex-shrink: 0;
 }
-.team-name-wrap {
-  display: inline-flex; align-items: center; gap: 0;
-}
+.team-name-wrap { display: inline-flex; align-items: center; gap: 0; }
 
 /* IN PROGRESS */
 .in-progress-grid {
@@ -214,12 +301,11 @@ tr.rank-1 .rank-num { color: var(--gold); }
 .format-cell { display: inline-flex; align-items: center; gap: 10px; }
 .format-glyph {
   display: inline-block; width: 22px; height: 16px;
-  vertical-align: middle; color: var(--text-2);
-  flex-shrink: 0;
+  vertical-align: middle; color: var(--text-2); flex-shrink: 0;
 }
 .format-label { font-size: 14px; color: var(--text); }
 
-/* SKINS WINNERS (multi-line with venmo handles) */
+/* SKINS WINNERS */
 .skins-winner-block { display: flex; flex-direction: column; gap: 4px; }
 .skins-winner-name { display: flex; align-items: center; font-weight: 600; }
 .skins-venmos {
@@ -239,10 +325,7 @@ tr.rank-1 .rank-num { color: var(--gold); }
 }
 .drama-card.unlucky::before { background: var(--gold-soft); }
 .drama-card.lucky::before   { background: var(--green); }
-.drama-header {
-  display: flex; align-items: center; gap: 14px; margin-bottom: 18px;
-  flex-wrap: wrap;
-}
+.drama-header { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; flex-wrap: wrap; }
 .drama-type-pill {
   display: inline-block; padding: 5px 12px; border-radius: 100px;
   font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
@@ -281,10 +364,7 @@ tr.rank-1 .rank-num { color: var(--gold); }
   background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
   box-shadow: var(--shadow);
 }
-.reel-track {
-  display: flex;
-  transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
-}
+.reel-track { display: flex; transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1); }
 .reel-card {
   flex: 0 0 100%; min-width: 100%;
   padding: 22px 26px 22px 28px; position: relative;
@@ -316,9 +396,7 @@ tr.rank-1 .rank-num { color: var(--gold); }
   background: var(--border); border: none; padding: 0;
   cursor: pointer; transition: all 0.25s ease;
 }
-.reel-dot.active {
-  width: 18px; border-radius: 3px;
-}
+.reel-dot.active { width: 18px; border-radius: 3px; }
 .reel-column.lucky   .reel-dot.active { background: var(--green); }
 .reel-column.unlucky .reel-dot.active { background: var(--gold-soft); }
 
@@ -338,6 +416,11 @@ tr.rank-1 .rank-num { color: var(--gold); }
 @media (max-width: 760px) {
   .container { padding: 36px 20px 60px; }
   .brand-display { font-size: 42px; }
+  .champion-card { padding: 44px 24px 40px; }
+  .champion-team { font-size: 44px; gap: 12px; }
+  .champion-team .team-dot { width: 14px; height: 14px; }
+  .champion-players { font-size: 15px; }
+  .champion-payout { font-size: 38px; }
   .money-strip { grid-template-columns: 1fr; }
   .money-stat + .money-stat { border-left: none; border-top: 1px solid var(--border-2); }
   .money-value { font-size: 24px; }
@@ -378,7 +461,7 @@ tr.rank-1 .rank-num { color: var(--gold); }
   <div class="brand-pre-label">Lucky Golf · 2026 Season</div>
   <h1 class="brand-display">The Lucky Cup</h1>
   <div class="brand-meta-row">
-    <span class="brand-meta">Fox Creek · Blue Tees · Updated May 27, 11:09 AM</span>
+    <span class="brand-meta">Fox Creek · Blue Tees · Updated May 27, 11:48 AM</span>
     <span class="status-pill awaiting">Awaiting Round 1</span>
   </div>
 </header>
@@ -414,6 +497,7 @@ tr.rank-1 .rank-num { color: var(--gold); }
       <div class="round-num">9</div>
     </div></div>
 </section>
+
 
 <section>
   <div class="section-label">Leaderboard</div>
@@ -510,7 +594,7 @@ tr.rank-1 .rank-num { color: var(--gold); }
   </div>
 </section>
 <footer class="dashboard-footer">
-  0 rounds played · Last updated May 27, 2026 · 11:09 AM
+  0 rounds played · Last updated May 27, 2026 · 11:48 AM
 </footer>
 </div>
 <script>
@@ -533,19 +617,11 @@ tr.rank-1 .rank-num { color: var(--gold); }
         else dots[d].classList.remove('active');
       }
     }
-    function start() {
-      stop();
-      timer = setInterval(function() { goTo(idx + 1); }, INTERVAL_MS);
-    }
-    function stop() {
-      if (timer) { clearInterval(timer); timer = null; }
-    }
+    function start() { stop(); timer = setInterval(function() { goTo(idx + 1); }, INTERVAL_MS); }
+    function stop()  { if (timer) { clearInterval(timer); timer = null; } }
     for (var i = 0; i < dots.length; i++) {
       (function(n) {
-        dots[n].addEventListener('click', function() {
-          goTo(n);
-          start();
-        });
+        dots[n].addEventListener('click', function() { goTo(n); start(); });
       })(i);
     }
     carousel.addEventListener('mouseenter', stop);
