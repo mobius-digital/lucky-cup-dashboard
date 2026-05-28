@@ -121,6 +121,7 @@ textarea { min-height: 80px; font-family: inherit; }
   font: inherit; font-size: 14px; cursor: pointer; margin-bottom: 16px;
 }
 .btn-back:hover { color: var(--text); }
+.nav-row { display: flex; justify-content: space-between; align-items: center; }
 
 .stepper-progress {
   display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;
@@ -291,8 +292,31 @@ textarea { min-height: 80px; font-family: inherit; }
     </div>
   </div>
 
-  <div class="screen" id="screen-teeoff">
+  <div class="screen" id="screen-password">
     <button class="btn-back" onclick="goToTeamPicker()">← Change team</button>
+    <div class="round-panel">
+      <div class="round-panel-team" style="margin-top:0;">
+        <span class="team-dot" id="pw-team-dot"></span>
+        <span id="pw-team-name"></span>
+      </div>
+    </div>
+    <h2 class="prompt">Team password</h2>
+    <p class="subprompt">Enter your team's password to submit. We'll remember it on this device.</p>
+    <div class="field">
+      <label class="field-label">Password</label>
+      <input type="password" class="text-input" id="pw-input" autocomplete="off"
+             placeholder="Team password"
+             onkeydown="if(event.key==='Enter'){event.preventDefault();submitPassword();}">
+      <div class="field-help" id="pw-error" style="color:var(--red); min-height:16px;"></div>
+    </div>
+    <button class="btn btn-primary" id="pw-continue" onclick="submitPassword()">Continue</button>
+  </div>
+
+  <div class="screen" id="screen-teeoff">
+    <div class="nav-row">
+      <button class="btn-back" onclick="goToTeamPicker()">← Change team</button>
+      <button class="btn-back" onclick="forgetTeamAndSwitch()" style="font-size:13px;">Not you?</button>
+    </div>
     <div class="round-panel">
       <div class="round-panel-row">
         <div>
@@ -328,7 +352,10 @@ textarea { min-height: 80px; font-family: inherit; }
   </div>
 
   <div class="screen" id="screen-scorecard">
-    <button class="btn-back" onclick="goToTeamPicker()">← Change team</button>
+    <div class="nav-row">
+      <button class="btn-back" onclick="goToTeamPicker()">← Change team</button>
+      <button class="btn-back" onclick="forgetTeamAndSwitch()" style="font-size:13px;">Not you?</button>
+    </div>
     <div class="round-panel live">
       <div class="round-panel-row">
         <div>
@@ -491,6 +518,7 @@ let state = {
   flow: null,
   roundNum: null,
   format: null,
+  teamPassword: null,   
   
   teamHandicap: 0,
   strokeAllocation: new Array(18).fill(0),
@@ -547,6 +575,7 @@ function renderTeamPicker() {
 function goToTeamPicker() {
   state.selectedTeam = null;
   state.flow = null;
+  state.teamPassword = null;
   state.teamHandicap = 0;
   state.strokeAllocation = new Array(18).fill(0);
   showScreen('screen-team');
@@ -574,16 +603,78 @@ async function selectTeam(teamId) {
       state.flow = 'scorecard';
       state.roundNum = data.inProgress;
       state.format = data.inProgressFormat;
-      startScorecardFlow();
     } else {
       state.flow = 'teeoff';
       state.roundNum = data.nextRound;
       state.format = data.nextFormat;
-      startTeeOffFlow();
+    }
+
+    
+    const cachedPw = getCachedPw(state.selectedTeam.id);
+    if (cachedPw) {
+      state.teamPassword = cachedPw;
+      proceedAfterAuth();
+    } else {
+      showPasswordScreen();
     }
   } catch (err) {
     showError('Could not check team status: ' + err.message);
   }
+}
+
+
+function pwKey(teamId) { return 'luckyCupPw_' + teamId; }
+function getCachedPw(teamId) { try { return localStorage.getItem(pwKey(teamId)) || null; } catch (e) { return null; } }
+function setCachedPw(teamId, pw) { try { localStorage.setItem(pwKey(teamId), pw); } catch (e) {} }
+function clearCachedPw(teamId) { try { localStorage.removeItem(pwKey(teamId)); } catch (e) {} }
+
+function proceedAfterAuth() {
+  if (state.flow === 'scorecard') startScorecardFlow();
+  else startTeeOffFlow();
+}
+
+function showPasswordScreen() {
+  document.getElementById('pw-team-name').textContent = state.selectedTeam.name;
+  document.getElementById('pw-team-dot').style.background = state.selectedTeam.color;
+  document.getElementById('pw-input').value = '';
+  document.getElementById('pw-error').textContent = '';
+  document.getElementById('pw-continue').disabled = false;
+  showScreen('screen-password');
+  setTimeout(() => { try { document.getElementById('pw-input').focus(); } catch (e) {} }, 120);
+}
+
+async function submitPassword() {
+  const pw = document.getElementById('pw-input').value;
+  const errEl = document.getElementById('pw-error');
+  if (!pw) { errEl.textContent = 'Enter your team password.'; return; }
+  const btn = document.getElementById('pw-continue');
+  btn.disabled = true;
+  errEl.textContent = '';
+  try {
+    const data = await postJson({ type: 'VERIFY_TEAM_PW', teamId: state.selectedTeam.id, password: pw });
+    if (!data.ok) throw new Error(data.error || 'Could not verify password');
+    if (!data.valid) { errEl.textContent = 'Incorrect password. Try again.'; btn.disabled = false; return; }
+    state.teamPassword = pw;
+    setCachedPw(state.selectedTeam.id, pw);
+    btn.disabled = false;
+    proceedAfterAuth();
+  } catch (err) {
+    errEl.textContent = err.message;
+    btn.disabled = false;
+  }
+}
+
+function promptPasswordAgain(msg) {
+  if (state.selectedTeam) clearCachedPw(state.selectedTeam.id);
+  state.teamPassword = null;
+  showPasswordScreen();
+  document.getElementById('pw-error').textContent = msg || '';
+}
+
+function forgetTeamAndSwitch() {
+  if (state.selectedTeam) clearCachedPw(state.selectedTeam.id);
+  state.teamPassword = null;
+  goToTeamPicker();
 }
 
 function startTeeOffFlow() {
@@ -610,12 +701,16 @@ async function submitTeeOff() {
       type: 'TEE_OFF',
       teamId: state.selectedTeam.id,
       roundNum: state.roundNum,
+      password: state.teamPassword,
       photoBase64: state.teeoffPhotoBase64,
       photoMimeType: state.teeoffPhotoMime,
       notes: document.getElementById('teeoff-notes').value.trim()
     };
     const data = await postJson(payload);
-    if (!data.ok) throw new Error(data.error || 'Submission failed');
+    if (!data.ok) {
+      if (/password/i.test(data.error || '')) { promptPasswordAgain('Your saved password was rejected — re-enter it.'); return; }
+      throw new Error(data.error || 'Submission failed');
+    }
 
     document.getElementById('success-title').textContent = 'Tee Off Locked In';
     document.getElementById('success-message').textContent = data.message || 'Good luck out there.';
@@ -906,13 +1001,17 @@ async function submitScorecard() {
       type: 'SCORECARD',
       teamId: state.selectedTeam.id,
       roundNum: state.roundNum,
+      password: state.teamPassword,
       holes: state.scHoles,
       scorecardPhotoBase64: state.scPhotoBase64,
       scorecardPhotoMimeType: state.scPhotoMime,
       notes: document.getElementById('sc-notes').value.trim()
     };
     const data = await postJson(payload);
-    if (!data.ok) throw new Error(data.error || 'Submission failed');
+    if (!data.ok) {
+      if (/password/i.test(data.error || '')) { promptPasswordAgain('Your saved password was rejected — re-enter it.'); return; }
+      throw new Error(data.error || 'Submission failed');
+    }
 
     const draftKey = 'luckyCupDraft_' + state.selectedTeam.id + '_R' + state.roundNum;
     localStorage.removeItem(draftKey);
@@ -1031,6 +1130,7 @@ function showError(msg) {
 function resetAll() {
   state.selectedTeam = null;
   state.flow = null;
+  state.teamPassword = null;
   state.teamHandicap = 0;
   state.strokeAllocation = new Array(18).fill(0);
   state.teeoffPhotoBase64 = null;
