@@ -171,7 +171,6 @@ textarea { min-height: 90px; }
   color: var(--text-2); font-weight: 600;
 }
 
-/* MODAL — hole editor */
 .modal-overlay {
   position: fixed; inset: 0; background: rgba(20,20,20,0.5);
   display: none; align-items: center; justify-content: center; z-index: 1000;
@@ -205,7 +204,6 @@ textarea { min-height: 90px; }
 .score-result { font-size: 11px; letter-spacing: 1.8px; text-align: center; text-transform: uppercase; font-weight: 700; margin: 12px 0 6px; color: var(--text-3); min-height: 14px; }
 .score-net-info { font-size: 11px; color: var(--text-3); text-align: center; margin-bottom: 18px; font-style: italic; min-height: 14px; }
 
-/* REASON SCREEN */
 .reason-grid { display: grid; gap: 10px; margin-bottom: 22px; }
 .reason-card {
   background: var(--surface); border: 1.5px solid var(--border); border-radius: 12px;
@@ -222,7 +220,6 @@ textarea { min-height: 90px; }
 }
 .diff-summary strong { color: var(--amber); font-weight: 800; }
 
-/* MISC */
 .spinner {
   width: 30px; height: 30px; border-radius: 50%;
   border: 3px solid var(--border); border-top-color: var(--amber);
@@ -242,7 +239,6 @@ textarea { min-height: 90px; }
 .result-title { font-size: 22px; font-weight: 800; letter-spacing: -0.01em; margin: 0 0 12px; text-align: center; }
 .result-message { font-size: 14px; color: var(--text-2); margin-bottom: 24px; text-align: center; }
 
-/* PHOTO LIGHTBOX */
 .lightbox {
   position: fixed; inset: 0; background: rgba(15,15,15,0.95);
   display: none; align-items: center; justify-content: center; z-index: 1100;
@@ -261,18 +257,18 @@ textarea { min-height: 90px; }
     <div class="brand-sub">Edit any team's completed round. Audit-tracked.</div>
   </header>
 
-  <!-- PASSCODE GATE -->
   <div class="screen active" id="screen-passcode">
     <h2 class="prompt">Admin passcode</h2>
     <p class="subprompt">Enter the key to unlock the admin tool. You'll only need to do this once per device.</p>
     <div class="field">
-      <input type="password" class="text-input" id="passcode-input" placeholder="Enter passcode" autocomplete="off">
+      <form onsubmit="event.preventDefault(); submitPasscode();" autocomplete="off">
+        <input type="password" class="text-input" id="passcode-input" placeholder="Enter passcode" autocomplete="current-password" name="admin-pass">
+      </form>
     </div>
     <button class="btn btn-primary" id="passcode-submit">Unlock</button>
     <div id="passcode-error" style="color:var(--red);font-size:13px;text-align:center;margin-top:12px;display:none;"></div>
   </div>
 
-  <!-- LOADING -->
   <div class="screen" id="screen-loading">
     <div class="center-screen">
       <div class="spinner"></div>
@@ -280,7 +276,6 @@ textarea { min-height: 90px; }
     </div>
   </div>
 
-  <!-- TEAM PICKER -->
   <div class="screen" id="screen-teams">
     <h2 class="prompt">Pick a team</h2>
     <p class="subprompt">Which team's scores need a change?</p>
@@ -290,7 +285,6 @@ textarea { min-height: 90px; }
     </div>
   </div>
 
-  <!-- ROUND PICKER -->
   <div class="screen" id="screen-rounds">
     <button class="btn-back" onclick="backToTeams()">← Pick a different team</button>
     <h2 class="prompt" id="rounds-title">Completed rounds</h2>
@@ -298,7 +292,6 @@ textarea { min-height: 90px; }
     <div class="list-grid" id="rounds-list"></div>
   </div>
 
-  <!-- EDIT SCREEN -->
   <div class="screen" id="screen-edit">
     <button class="btn-back" onclick="backToRounds()">← Pick a different round</button>
 
@@ -325,7 +318,6 @@ textarea { min-height: 90px; }
     </div>
   </div>
 
-  <!-- REASON SCREEN -->
   <div class="screen" id="screen-reason">
     <button class="btn-back" onclick="backToEdit()">← Back to scores</button>
     <h2 class="prompt">Reason for changes</h2>
@@ -359,7 +351,6 @@ textarea { min-height: 90px; }
     <button class="btn btn-amber" id="reason-submit" onclick="submitAmendment()" disabled>Apply Changes</button>
   </div>
 
-  <!-- SUBMITTING -->
   <div class="screen" id="screen-submitting">
     <div class="center-screen">
       <div class="spinner"></div>
@@ -367,7 +358,6 @@ textarea { min-height: 90px; }
     </div>
   </div>
 
-  <!-- SUCCESS -->
   <div class="screen" id="screen-success">
     <div class="result-icon success">✓</div>
     <h2 class="result-title">Changes Applied</h2>
@@ -378,7 +368,6 @@ textarea { min-height: 90px; }
     </div>
   </div>
 
-  <!-- ERROR -->
   <div class="screen" id="screen-error">
     <div class="result-icon error">!</div>
     <h2 class="result-title">Something went wrong</h2>
@@ -388,7 +377,6 @@ textarea { min-height: 90px; }
 
 </div>
 
-<!-- HOLE EDITOR MODAL -->
 <div class="modal-overlay" id="hole-modal">
   <div class="modal">
     <h3 id="hole-modal-title">Hole 1</h3>
@@ -410,7 +398,6 @@ textarea { min-height: 90px; }
   </div>
 </div>
 
-<!-- PHOTO LIGHTBOX -->
 <div class="lightbox" id="lightbox" onclick="closeLightbox()">
   <img id="lightbox-img" alt="Scorecard">
 </div>
@@ -447,15 +434,46 @@ let state = {
   selectedTeam: null,
   completedRounds: [],
   selectedRound: null,
-  roundData: null,    // full data for selected round (from admin-round-data)
-  edits: {},          // { holeIdx: newGrossScore }  — only changed holes
-  modalHole: null,    // hole number currently in edit modal
+  roundData: null,
+  edits: {},
+  modalHole: null,
   modalScore: null,
-  reasonType: null    // 'typo' | 'appeal' | 'other'
+  reasonType: null
 };
 
 // ============================================================
-//  SCREEN HELPERS
+//  CORE — all admin calls go through POST to avoid Apps Script
+//  CORS issues on GET responses from cross-origin browsers.
+// ============================================================
+async function callAdmin(type, payload) {
+  const body = Object.assign({}, payload || {}, { type: type, adminKey: state.adminKey });
+  const res = await fetch(WEB_APP_URL, {
+    method: 'POST',
+    mode: 'cors',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(body)
+  });
+  const data = await res.json();
+  if (!data.ok) throw new Error(data.error || 'Request failed');
+  return data;
+}
+
+// Verify uses a key that's not yet in state (during passcode entry)
+async function callAdminWithKey(type, payload, explicitKey) {
+  const body = Object.assign({}, payload || {}, { type: type, adminKey: explicitKey });
+  const res = await fetch(WEB_APP_URL, {
+    method: 'POST',
+    mode: 'cors',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(body)
+  });
+  const data = await res.json();
+  if (!data.ok) throw new Error(data.error || 'Request failed');
+  return data;
+}
+
+// ============================================================
+//  SCREENS
 // ============================================================
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -475,7 +493,6 @@ async function init() {
   const stored = localStorage.getItem(STORAGE_KEY);
   if (stored) {
     state.adminKey = stored;
-    // Verify against the server
     showScreen('screen-loading');
     document.getElementById('loading-msg').textContent = 'Verifying access…';
     const ok = await verifyKey(stored);
@@ -526,9 +543,13 @@ async function submitPasscode() {
 }
 
 async function verifyKey(key) {
-  const res = await fetch(WEB_APP_URL + '?action=admin-verify&adminKey=' + encodeURIComponent(key));
-  const data = await res.json();
-  return !!data.ok;
+  try {
+    const data = await callAdminWithKey('ADMIN_VERIFY', {}, key);
+    return !!data.verified;
+  } catch (err) {
+    // Re-throw so caller can show the actual error message
+    throw err;
+  }
 }
 
 function signOut() {
@@ -546,9 +567,7 @@ async function loadTeams() {
   showScreen('screen-loading');
   document.getElementById('loading-msg').textContent = 'Loading teams…';
   try {
-    const res = await fetch(WEB_APP_URL + '?action=admin-teams&adminKey=' + encodeURIComponent(state.adminKey));
-    const data = await res.json();
-    if (!data.ok) throw new Error(data.error || 'Failed to load teams');
+    const data = await callAdmin('ADMIN_LIST_TEAMS', {});
     state.teams = data.teams || [];
     renderTeamsList();
     showScreen('screen-teams');
@@ -590,11 +609,7 @@ async function selectTeam(teamId) {
   showScreen('screen-loading');
   document.getElementById('loading-msg').textContent = 'Loading rounds…';
   try {
-    const url = WEB_APP_URL + '?action=admin-team-rounds&teamId=' + encodeURIComponent(teamId)
-      + '&adminKey=' + encodeURIComponent(state.adminKey);
-    const res = await fetch(url);
-    const data = await res.json();
-    if (!data.ok) throw new Error(data.error || 'Failed to load rounds');
+    const data = await callAdmin('ADMIN_LIST_ROUNDS', { teamId: teamId });
     state.completedRounds = data.rounds || [];
     renderRoundsList();
     document.getElementById('rounds-title').textContent = state.selectedTeam.name;
@@ -638,13 +653,10 @@ async function selectRound(roundNum) {
   showScreen('screen-loading');
   document.getElementById('loading-msg').textContent = 'Loading round data…';
   try {
-    const url = WEB_APP_URL + '?action=admin-round-data'
-      + '&teamId=' + encodeURIComponent(state.selectedTeam.id)
-      + '&roundNum=' + roundNum
-      + '&adminKey=' + encodeURIComponent(state.adminKey);
-    const res = await fetch(url);
-    const data = await res.json();
-    if (!data.ok) throw new Error(data.error || 'Failed to load round');
+    const data = await callAdmin('ADMIN_ROUND_DATA', {
+      teamId: state.selectedTeam.id,
+      roundNum: roundNum
+    });
     state.roundData = data;
     renderEditScreen();
     showScreen('screen-edit');
@@ -665,7 +677,6 @@ function goToEdit() {
 
 function renderEditScreen() {
   const d = state.roundData;
-  // Header
   const date = d.datePlayed ? new Date(d.datePlayed).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '';
   document.getElementById('edit-header').innerHTML =
     '<div class="round-header-top">' +
@@ -675,7 +686,6 @@ function renderEditScreen() {
     '<div class="round-header-meta">Round ' + d.roundNum + ' · ' + escapeHtml(d.format) + (date ? ' · ' + date : '') + '</div>' +
     '<div class="round-header-handicap">Handicap: <strong>' + d.handicap + '</strong></div>';
 
-  // Photo
   const photoContainer = document.getElementById('edit-photo-container');
   if (d.scorecardPhoto) {
     const thumb = driveThumb(d.scorecardPhoto, 1200);
@@ -687,13 +697,8 @@ function renderEditScreen() {
     photoContainer.innerHTML = '<div class="scorecard-photo-empty">No scorecard photo on file.</div>';
   }
 
-  // Scorecard
   renderScorecard();
-
-  // History (parse audit tags from notes)
   renderHistory(d.notes);
-
-  // Buttons
   updateEditButtons();
 }
 
@@ -702,7 +707,6 @@ function renderScorecard() {
   const grid = document.getElementById('edit-scorecard');
   const buildNine = (start) => {
     let html = '<div class="scorecard-9">';
-    // Header
     html += '<div class="header label">Hole</div>';
     for (let i = start; i < start + 9; i++) {
       const isStroke = (d.strokeAllocation[i] || 0) > 0 && d.format !== 'Scramble';
@@ -710,13 +714,11 @@ function renderScorecard() {
     }
     html += '<div class="header label">Tot</div>';
 
-    // Par
     html += '<div class="label">Par</div>';
     let parTot = 0;
     for (let i = start; i < start + 9; i++) { html += '<div>' + COURSE[i].par + '</div>'; parTot += COURSE[i].par; }
     html += '<div class="total">' + parTot + '</div>';
 
-    // Gross — clickable
     html += '<div class="label">Gross</div>';
     let grossTot = 0;
     for (let i = start; i < start + 9; i++) {
@@ -734,7 +736,6 @@ function renderScorecard() {
     }
     html += '<div class="total">' + grossTot + '</div>';
 
-    // Net — computed live
     const hasHandicap = d.format !== 'Scramble' && d.handicap > 0;
     if (hasHandicap) {
       html += '<div class="label">Net</div>';
@@ -750,7 +751,6 @@ function renderScorecard() {
       html += '<div class="total">' + netTot + '</div>';
     }
 
-    // Pts
     html += '<div class="label">Pts</div>';
     let ptsTot = 0;
     for (let i = start; i < start + 9; i++) {
@@ -776,7 +776,6 @@ function renderHistory(notes) {
     section.style.display = 'none';
     return;
   }
-  // Extract audit tags like [APPEALED 2026-06-15: ...]
   const tags = notes.match(/\[(APPEALED|FIXED|CORRECTED)[^\]]*\]/g);
   if (!tags || tags.length === 0) {
     section.style.display = 'none';
@@ -822,9 +821,7 @@ function openHoleModal(holeNum) {
   const strokes = state.roundData.strokeAllocation[idx] || 0;
   const hasHandicap = state.roundData.format !== 'Scramble' && state.roundData.handicap > 0;
   let metaText = 'Par ' + hole.par + ' · ' + hole.yards + 'y · Hcp Index ' + hole.hcp;
-  if (hasHandicap && strokes > 0) {
-    metaText += ' · +' + strokes + ' stroke';
-  }
+  if (hasHandicap && strokes > 0) metaText += ' · +' + strokes + ' stroke';
   document.getElementById('hole-modal-meta').textContent = metaText;
   document.getElementById('hole-modal-current').innerHTML = 'Current gross: <strong>' + original + '</strong>';
 
@@ -882,7 +879,6 @@ function saveHoleEdit() {
   const newScore = state.modalScore;
 
   if (newScore === original) {
-    // No change — remove from edits if it was there
     delete state.edits[idx];
   } else {
     state.edits[idx] = newScore;
@@ -902,7 +898,6 @@ function goToReason() {
   document.getElementById('reason-note').value = '';
   document.querySelectorAll('.reason-card').forEach(c => c.classList.remove('selected'));
 
-  // Build diff summary
   const diffs = [];
   Object.keys(state.edits).map(k => parseInt(k)).sort((a, b) => a - b).forEach(idx => {
     const original = state.roundData.grossHoles[idx];
@@ -939,7 +934,6 @@ async function submitAmendment() {
   const note = document.getElementById('reason-note').value.trim();
   if (!state.reasonType || !note) return;
 
-  // Build full newGrossHoles array (existing + edits)
   const newGrossHoles = state.roundData.grossHoles.slice();
   Object.keys(state.edits).forEach(k => {
     newGrossHoles[parseInt(k)] = state.edits[k];
@@ -948,27 +942,17 @@ async function submitAmendment() {
   showScreen('screen-submitting');
 
   try {
-    const payload = {
-      type: 'ADMIN_AMEND',
-      adminKey: state.adminKey,
+    const data = await callAdmin('ADMIN_AMEND', {
       teamId: state.selectedTeam.id,
       roundNum: state.selectedRound,
       newGrossHoles: newGrossHoles,
       reasonType: state.reasonType,
       reasonNote: note
-    };
-    const res = await fetch(WEB_APP_URL, {
-      method: 'POST', mode: 'cors',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(payload)
     });
-    const data = await res.json();
-    if (!data.ok) throw new Error(data.error || 'Submission failed');
 
     document.getElementById('success-message').textContent =
       data.diffCount + ' hole(s) updated · ' + data.totalPts + ' pts total · audit logged';
     state.edits = {};
-    // Refresh round data so the edit screen shows the new state if user clicks "View this round"
     await refreshRoundData();
     showScreen('screen-success');
   } catch (err) {
@@ -978,16 +962,12 @@ async function submitAmendment() {
 
 async function refreshRoundData() {
   try {
-    const url = WEB_APP_URL + '?action=admin-round-data'
-      + '&teamId=' + encodeURIComponent(state.selectedTeam.id)
-      + '&roundNum=' + state.selectedRound
-      + '&adminKey=' + encodeURIComponent(state.adminKey);
-    const res = await fetch(url);
-    const data = await res.json();
-    if (data.ok) {
-      state.roundData = data;
-      renderEditScreen();
-    }
+    const data = await callAdmin('ADMIN_ROUND_DATA', {
+      teamId: state.selectedTeam.id,
+      roundNum: state.selectedRound
+    });
+    state.roundData = data;
+    renderEditScreen();
   } catch (e) { /* non-fatal */ }
 }
 
@@ -1034,9 +1014,7 @@ function escapeHtml(str) {
     .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
 }
 
-function escapeAttr(str) {
-  return escapeHtml(str);
-}
+function escapeAttr(str) { return escapeHtml(str); }
 
 init();
 </script>
