@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#FAF9F6">
+<title>The Lucky Cup · Sign Up</title>
+<style>
+:root {
+  --bg: #FAF9F6; --surface: #FFFFFF; --surface-warm: #F5F2EB;
+  --text: #1A1A1A; --text-2: #5A5A5A; --text-3: #6B6B6B; --text-faint: #A8A8A8;
+  --gold: #B8860B; --gold-soft: #C9B273;
+  --gold-tint: rgba(184,134,11,0.08); --gold-tint-strong: rgba(184,134,11,0.18);
+  --green: #2ECC71; --green-deep: #248F4F; --green-tint: rgba(46,204,113,0.07);
+  --red: #DC503C; --red-tint: rgba(220,80,60,0.07);
+  --border: #EAEAE5; --border-2: #F0EFE8;
+  --shadow: 0 1px 2px rgba(20,20,20,0.03), 0 6px 20px rgba(20,20,20,0.04);
+  --shadow-lift: 0 2px 4px rgba(20,20,20,0.04), 0 12px 32px rgba(20,20,20,0.06);
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg); color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", system-ui, sans-serif;
+  font-size: 15px; line-height: 1.55; -webkit-font-smoothing: antialiased;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.container { max-width: 560px; margin: 0 auto; padding: 32px 20px 60px; }
+
+.brand-header { margin-bottom: 32px; padding-bottom: 22px; border-bottom: 1px solid var(--border); }
+.brand-pre-label { font-size: 10px; letter-spacing: 2.5px; color: var(--text-2); text-transform: uppercase; font-weight: 600; margin-bottom: 14px; }
+.brand-display {
+  font-size: 38px; font-weight: 900; letter-spacing: -0.025em; line-height: 0.95;
+  margin: 0; color: var(--text); position: relative; display: inline-block;
+}
+.brand-display::after {
+  content: ""; position: absolute; left: 0; bottom: -10px; width: 56px; height: 2px;
+  background: linear-gradient(90deg, var(--gold) 0%, var(--gold-soft) 60%, transparent 100%);
+}
+.brand-sub { margin-top: 22px; font-size: 13px; color: var(--text-2); }
+
+.screen { display: none; }
+.screen.active { display: block; }
+
+.prompt { font-size: 22px; font-weight: 800; letter-spacing: -0.01em; margin: 0 0 8px; }
+.subprompt { font-size: 14px; color: var(--text-2); margin: 0 0 24px; }
+
+.field { margin-bottom: 22px; }
+.field-label { display: block; font-size: 11px; letter-spacing: 2px; color: var(--text-3); text-transform: uppercase; font-weight: 700; margin-bottom: 10px; }
+.field-help { font-size: 12px; color: var(--text-2); margin: -4px 0 12px; }
+.text-input {
+  width: 100%; padding: 14px 16px; font: inherit; font-size: 15px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+  color: var(--text);
+}
+.text-input:focus { outline: none; border-color: var(--gold); }
+.field-pair { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 12px; }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 100%; padding: 16px 24px; font: inherit; font-size: 16px; font-weight: 700;
+  border: none; border-radius: 12px; cursor: pointer; text-decoration: none;
+  transition: transform 0.12s, opacity 0.12s;
+}
+.btn:active { transform: scale(0.98); }
+.btn-primary { background: var(--text); color: var(--bg); }
+.btn-gold    { background: var(--gold); color: white; }
+.btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn + .btn { margin-top: 10px; }
+
+.form-error { color: var(--red); font-size: 13px; min-height: 18px; margin: 6px 0 14px; font-weight: 600; }
+
+.spinner {
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 3px solid var(--border); border-top-color: var(--gold);
+  animation: spin 0.8s linear infinite; margin: 0 auto 14px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-msg { text-align: center; color: var(--text-2); font-size: 14px; }
+.center-screen { text-align: center; padding: 60px 20px; }
+
+.result-icon {
+  width: 64px; height: 64px; border-radius: 50%; margin: 0 auto 22px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px; font-weight: 800;
+}
+.result-icon.success { background: var(--green-tint); color: var(--green-deep); }
+.result-icon.error   { background: var(--red-tint); color: var(--red); }
+.result-title { font-size: 26px; font-weight: 800; letter-spacing: -0.01em; margin: 0 0 14px; text-align: center; }
+.result-message { font-size: 15px; color: var(--text-2); margin-bottom: 24px; text-align: center; }
+
+.confirm-card {
+  background: var(--gold-tint); border: 1px solid var(--gold-tint-strong);
+  border-radius: 14px; padding: 22px; margin-bottom: 16px; text-align: center;
+}
+.confirm-team { font-size: 22px; font-weight: 900; letter-spacing: -0.01em; color: var(--text); margin-bottom: 8px; }
+.confirm-venmos { font-size: 14px; color: var(--gold); font-weight: 700; }
+.confirm-note { font-size: 13px; color: var(--text-2); margin-bottom: 28px; text-align: center; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header class="brand-header">
+    <div class="brand-pre-label">Lucky Golf · 2026 Season</div>
+    <h1 class="brand-display">The Lucky Cup</h1>
+    <div class="brand-sub">Fox Creek · Blue Tees · Sign up your team</div>
+  </header>
+
+  <div class="screen active" id="screen-signup">
+    <h2 class="prompt">Create your team</h2>
+    <p class="subprompt">Two players, one shared password. Your commissioner sets your handicap before play.</p>
+
+    <div class="field">
+      <label class="field-label">Player Names</label>
+      <div class="field-help">First names only — your team name becomes "Player 1 / Player 2".</div>
+      <div class="field-pair">
+        <input type="text" class="text-input" id="su-p1" placeholder="Player 1" autocomplete="off">
+        <input type="text" class="text-input" id="su-p2" placeholder="Player 2" autocomplete="off">
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Venmo Handles</label>
+      <div class="field-help">Username, @handle, or paste your Venmo link — we'll tidy it up.</div>
+      <div class="field-pair">
+        <input type="text" class="text-input" id="su-v1" placeholder="Player 1 Venmo" autocomplete="off">
+        <input type="text" class="text-input" id="su-v2" placeholder="Player 2 Venmo" autocomplete="off">
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Team Password</label>
+      <div class="field-help">One shared password — either player uses it to submit scores. Don't share it with other teams.</div>
+      <input type="password" class="text-input" id="su-pw" placeholder="Pick a team password" autocomplete="off">
+    </div>
+
+    <div class="form-error" id="su-error"></div>
+    <button class="btn btn-gold" id="su-submit" onclick="submitSignup()">Create Team</button>
+  </div>
+
+  <div class="screen" id="screen-submitting">
+    <div class="center-screen">
+      <div class="spinner"></div>
+      <div class="loading-msg" id="submit-msg">Creating your team…</div>
+    </div>
+  </div>
+
+  <div class="screen" id="screen-success">
+    <div class="result-icon success">✓</div>
+    <h2 class="result-title">You're in!</h2>
+    <div class="confirm-card">
+      <div class="confirm-team" id="su-success-team"></div>
+      <div class="confirm-venmos" id="su-success-venmos"></div>
+    </div>
+    <p class="confirm-note">Use your team password to submit scores once the season starts. Your commissioner will set your handicap before play.</p>
+    <button class="btn btn-primary" onclick="resetSignup()">Sign up another team</button>
+  </div>
+
+  <div class="screen" id="screen-error">
+    <div class="result-icon error">!</div>
+    <h2 class="result-title">Couldn't create team</h2>
+    <p class="result-message" id="error-message"></p>
+    <button class="btn btn-primary" onclick="resetSignup()">Try Again</button>
+  </div>
+
+</div>
+
+<script>
+const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxm8DBRk6ViVQ-NjvWF8Bf7YWVuCfSJOlA8QFgJmaLV8ZLYLu7uYUWWkSSf9rIKRnHU/exec';
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function val(id) { return document.getElementById(id).value.trim(); }
+
+async function submitSignup() {
+  const p1First = val('su-p1');
+  const p2First = val('su-p2');
+  const password = document.getElementById('su-pw').value;
+  const err = document.getElementById('su-error');
+  err.textContent = '';
+
+  if (!p1First || !p2First) { err.textContent = 'Both player first names are required.'; return; }
+  if (!password.trim())     { err.textContent = 'Pick a team password.'; return; }
+
+  const btn = document.getElementById('su-submit');
+  btn.disabled = true;
+  document.getElementById('submit-msg').textContent = 'Creating your team…';
+  showScreen('screen-submitting');
+
+  try {
+    const data = await postJson({
+      type: 'TEAM_SIGNUP',
+      p1First: p1First,
+      p2First: p2First,
+      p1Venmo: val('su-v1'),
+      p2Venmo: val('su-v2'),
+      password: password
+    });
+    if (!data.ok) throw new Error(data.error || 'Signup failed');
+
+    document.getElementById('su-success-team').textContent = data.teamName + '  ·  ' + data.teamId;
+    const venmos = [data.p1Venmo, data.p2Venmo].filter(Boolean).join('   ·   ');
+    document.getElementById('su-success-venmos').textContent = venmos || '(no Venmo on file)';
+    showScreen('screen-success');
+  } catch (e) {
+    document.getElementById('error-message').textContent = e.message;
+    showScreen('screen-error');
+    btn.disabled = false;
+  }
+}
+
+async function postJson(payload) {
+  const res = await fetch(WEB_APP_URL, {
+    method: 'POST',
+    mode: 'cors',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(payload)
+  });
+  return await res.json();
+}
+
+function resetSignup() {
+  ['su-p1', 'su-p2', 'su-v1', 'su-v2', 'su-pw'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('su-error').textContent = '';
+  document.getElementById('su-submit').disabled = false;
+  showScreen('screen-signup');
+}
+</script>
+</body>
+</html>
